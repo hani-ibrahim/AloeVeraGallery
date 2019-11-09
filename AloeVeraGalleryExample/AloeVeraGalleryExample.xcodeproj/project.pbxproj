@@ -8,20 +8,38 @@
 
 /* Begin PBXBuildFile section */
 		374AE0CA236F1DA300E9E9BE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 374AE0C9236F1DA300E9E9BE /* AppDelegate.swift */; };
-		374AE0CE236F1DA300E9E9BE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 374AE0CD236F1DA300E9E9BE /* ViewController.swift */; };
 		374AE0D1236F1DA300E9E9BE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 374AE0CF236F1DA300E9E9BE /* Main.storyboard */; };
 		374AE0D3236F1DA400E9E9BE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 374AE0D2236F1DA400E9E9BE /* Assets.xcassets */; };
 		374AE0D6236F1DA400E9E9BE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 374AE0D4236F1DA400E9E9BE /* LaunchScreen.storyboard */; };
+		37E2759C2376EB8900768A4E /* ExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37E2759B2376EB8900768A4E /* ExampleViewController.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		37E275972376EAC600768A4E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 37E275932376EAC600768A4E /* AloeVeraGallery.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 374AE0B1236F1C9500E9E9BE;
+			remoteInfo = AloeVeraGallery;
+		};
+		37E275992376EADA00768A4E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 37E275932376EAC600768A4E /* AloeVeraGallery.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 374AE0B0236F1C9500E9E9BE;
+			remoteInfo = AloeVeraGallery;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		374AE0C6236F1DA300E9E9BE /* AloeVeraGalleryExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AloeVeraGalleryExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		374AE0C9236F1DA300E9E9BE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		374AE0CD236F1DA300E9E9BE /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		374AE0D0236F1DA300E9E9BE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		374AE0D2236F1DA400E9E9BE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		374AE0D5236F1DA400E9E9BE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		374AE0D7236F1DA400E9E9BE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		37E275932376EAC600768A4E /* AloeVeraGallery.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AloeVeraGallery.xcodeproj; path = ../AloeVeraGallery.xcodeproj; sourceTree = "<group>"; };
+		37E2759B2376EB8900768A4E /* ExampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -49,6 +67,7 @@
 			isa = PBXGroup;
 			children = (
 				374AE0C8236F1DA300E9E9BE /* AloeVeraGalleryExample */,
+				37E275922376EAAE00768A4E /* Frameworks */,
 				374AE0C7236F1DA300E9E9BE /* Products */,
 			);
 			sourceTree = "<group>";
@@ -65,11 +84,27 @@
 			isa = PBXGroup;
 			children = (
 				374AE0C9236F1DA300E9E9BE /* AppDelegate.swift */,
-				374AE0CD236F1DA300E9E9BE /* ViewController.swift */,
+				37E2759B2376EB8900768A4E /* ExampleViewController.swift */,
 				374AE0CF236F1DA300E9E9BE /* Main.storyboard */,
 				373DE8D3236F22C200A94EA6 /* Supporting files */,
 			);
 			path = AloeVeraGalleryExample;
+			sourceTree = "<group>";
+		};
+		37E275922376EAAE00768A4E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				37E275932376EAC600768A4E /* AloeVeraGallery.xcodeproj */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		37E275942376EAC600768A4E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				37E275982376EAC600768A4E /* AloeVeraGallery.framework */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -86,6 +121,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				37E2759A2376EADA00768A4E /* PBXTargetDependency */,
 			);
 			name = AloeVeraGalleryExample;
 			productName = AloeVeraGalleryExample;
@@ -118,12 +154,28 @@
 			mainGroup = 374AE0BD236F1DA300E9E9BE;
 			productRefGroup = 374AE0C7236F1DA300E9E9BE /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 37E275942376EAC600768A4E /* Products */;
+					ProjectRef = 37E275932376EAC600768A4E /* AloeVeraGallery.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				374AE0C5236F1DA300E9E9BE /* AloeVeraGalleryExample */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		37E275982376EAC600768A4E /* AloeVeraGallery.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = AloeVeraGallery.framework;
+			remoteRef = 37E275972376EAC600768A4E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		374AE0C4236F1DA300E9E9BE /* Resources */ = {
@@ -143,12 +195,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				374AE0CE236F1DA300E9E9BE /* ViewController.swift in Sources */,
 				374AE0CA236F1DA300E9E9BE /* AppDelegate.swift in Sources */,
+				37E2759C2376EB8900768A4E /* ExampleViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		37E2759A2376EADA00768A4E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = AloeVeraGallery;
+			targetProxy = 37E275992376EADA00768A4E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		374AE0CF236F1DA300E9E9BE /* Main.storyboard */ = {

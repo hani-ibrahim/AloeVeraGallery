@@ -7,3 +7,12 @@
 //
 
 import Foundation
+
+public struct AloeVeraGallery {
+    
+    public static func makeGallery() -> GalleryViewController {
+        GalleryViewController(nibName: nil, bundle: Bundle(for: BundleToken.self))
+    }
+}
+
+private class BundleToken {}
