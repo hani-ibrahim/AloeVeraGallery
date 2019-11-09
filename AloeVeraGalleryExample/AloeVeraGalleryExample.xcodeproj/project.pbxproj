@@ -16,6 +16,7 @@
 		37E275A22376F47C00768A4E /* AloeVeraGallery.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 37E275982376EAC600768A4E /* AloeVeraGallery.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		37E275AC2376FAE100768A4E /* AloeVeraPagedCollectionView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37E275AB2376FAE100768A4E /* AloeVeraPagedCollectionView.framework */; };
 		37E275AD2376FAE100768A4E /* AloeVeraPagedCollectionView.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 37E275AB2376FAE100768A4E /* AloeVeraPagedCollectionView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		37E275B22377020200768A4E /* TestImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 37E275B12377020200768A4E /* TestImages.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,6 +61,7 @@
 		37E275932376EAC600768A4E /* AloeVeraGallery.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AloeVeraGallery.xcodeproj; path = ../AloeVeraGallery.xcodeproj; sourceTree = "<group>"; };
 		37E2759B2376EB8900768A4E /* ExampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleViewController.swift; sourceTree = "<group>"; };
 		37E275AB2376FAE100768A4E /* AloeVeraPagedCollectionView.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AloeVeraPagedCollectionView.framework; path = Carthage/Build/iOS/AloeVeraPagedCollectionView.framework; sourceTree = "<group>"; };
+		37E275B12377020200768A4E /* TestImages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = TestImages.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +111,7 @@
 				374AE0C9236F1DA300E9E9BE /* AppDelegate.swift */,
 				37E2759B2376EB8900768A4E /* ExampleViewController.swift */,
 				374AE0CF236F1DA300E9E9BE /* Main.storyboard */,
+				37E275B0237701E300768A4E /* Resources */,
 				373DE8D3236F22C200A94EA6 /* Supporting files */,
 			);
 			path = AloeVeraGalleryExample;
@@ -136,6 +139,14 @@
 				37E275932376EAC600768A4E /* AloeVeraGallery.xcodeproj */,
 			);
 			name = Subprojects;
+			sourceTree = "<group>";
+		};
+		37E275B0237701E300768A4E /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				37E275B12377020200768A4E /* TestImages.xcassets */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -216,6 +227,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				374AE0D6236F1DA400E9E9BE /* LaunchScreen.storyboard in Resources */,
+				37E275B22377020200768A4E /* TestImages.xcassets in Resources */,
 				374AE0D3236F1DA400E9E9BE /* Assets.xcassets in Resources */,
 				374AE0D1236F1DA300E9E9BE /* Main.storyboard in Resources */,
 			);
