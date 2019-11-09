@@ -14,18 +14,19 @@
                 <outlet property="collectionView" destination="QGu-11-YOD" id="oy0-R4-kvF"/>
                 <outlet property="collectionViewLayout" destination="cXS-yu-W3M" id="CaL-eA-s7J"/>
                 <outlet property="pageControl" destination="G4A-e3-iEn" id="9ij-NX-bY8"/>
+                <outlet property="rightConstraint" destination="bAK-hR-tvp" id="5BY-pR-v7A"/>
                 <outlet property="view" destination="iN0-l3-epB" id="pe6-ld-9Vl"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="iN0-l3-epB">
+        <view clipsSubviews="YES" contentMode="scaleToFill" id="iN0-l3-epB">
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="QGu-11-YOD">
+                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" contentInsetAdjustmentBehavior="never" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="QGu-11-YOD">
                     <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                     <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                    <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="cXS-yu-W3M" customClass="PagedCollectionViewFlowLayout" customModule="AloeVeraPagedCollectionView">
+                    <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="cXS-yu-W3M" customClass="GalleryCollectionViewLayout" customModule="AloeVeraGallery" customModuleProvider="target">
                         <size key="itemSize" width="50" height="50"/>
                         <size key="headerReferenceSize" width="0.0" height="0.0"/>
                         <size key="footerReferenceSize" width="0.0" height="0.0"/>
@@ -33,7 +34,8 @@
                     </collectionViewFlowLayout>
                 </collectionView>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vJH-fA-3NO">
-                    <rect key="frame" x="355" y="64" width="39" height="30"/>
+                    <rect key="frame" x="353" y="64" width="41" height="32"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
                     <state key="normal" title="Close">
                         <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </state>
@@ -49,10 +51,10 @@
                 <constraint firstAttribute="bottom" secondItem="QGu-11-YOD" secondAttribute="bottom" id="5fv-pP-9bE"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="vJH-fA-3NO" secondAttribute="trailing" constant="20" id="DZ8-K9-VEL"/>
                 <constraint firstItem="G4A-e3-iEn" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="Jnh-s6-MEP"/>
-                <constraint firstItem="QGu-11-YOD" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="Kjs-FE-sJO"/>
+                <constraint firstAttribute="left" secondItem="QGu-11-YOD" secondAttribute="left" id="Kjs-FE-sJO"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="G4A-e3-iEn" secondAttribute="trailing" constant="20" id="T9U-qR-3fQ"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="G4A-e3-iEn" secondAttribute="bottom" constant="10" id="Tu1-bT-DZX"/>
-                <constraint firstAttribute="trailing" secondItem="QGu-11-YOD" secondAttribute="trailing" id="bAK-hR-tvp"/>
+                <constraint firstItem="QGu-11-YOD" firstAttribute="right" secondItem="iN0-l3-epB" secondAttribute="right" id="bAK-hR-tvp"/>
                 <constraint firstItem="vJH-fA-3NO" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="20" id="sa2-PN-RQd"/>
                 <constraint firstItem="QGu-11-YOD" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="uCH-Lm-uU9"/>
             </constraints>

@@ -80,7 +80,7 @@
 			isa = PBXGroup;
 			children = (
 				37D980102301E2FB00273C52 /* PagedCollectionViewExample */,
-				37D9802A2301E3B900273C52 /* Frameworks */,
+				37D9802A2301E3B900273C52 /* Subprojects */,
 				37D9800F2301E2FB00273C52 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -117,12 +117,12 @@
 			name = "Supporting files";
 			sourceTree = "<group>";
 		};
-		37D9802A2301E3B900273C52 /* Frameworks */ = {
+		37D9802A2301E3B900273C52 /* Subprojects */ = {
 			isa = PBXGroup;
 			children = (
 				37D9802B2301E3DA00273C52 /* AloeVeraPagedCollectionView.xcodeproj */,
 			);
-			name = Frameworks;
+			name = Subprojects;
 			sourceTree = "<group>";
 		};
 		37D9802C2301E3DA00273C52 /* Products */ = {

@@ -8,25 +8,29 @@
 
 import UIKit
 
-class CollectionViewDataSource: NSObject {
+public final class CollectionViewDataSource: NSObject {
     
     private let sections: [SectionConfiguring]
     
-    init(sections: [SectionConfiguring]) {
+    public init(sections: [SectionConfiguring]) {
         self.sections = sections
+    }
+    
+    public func registerCells(in collectionView: UICollectionView) {
+        sections.forEach { $0.registerCell(for: collectionView) }
     }
 }
 
 extension CollectionViewDataSource: UICollectionViewDataSource {
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
+    public func numberOfSections(in collectionView: UICollectionView) -> Int {
         sections.count
     }
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         sections[section].numberOfCells
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         sections[indexPath.section].dequeueCell(for: collectionView, at: indexPath)
     }
 }

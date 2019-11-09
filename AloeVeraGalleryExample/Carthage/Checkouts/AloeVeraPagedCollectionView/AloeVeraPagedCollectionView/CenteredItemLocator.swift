@@ -103,7 +103,7 @@ private extension CGPoint {
 private extension UIScrollView {
     var adjustedCenter: CGPoint {
         CGPoint(
-            x: (bounds.size.width + adjustedContentInset.right - adjustedContentInset.left) / 2,
+            x: (bounds.size.width + adjustedContentInset.left - adjustedContentInset.right) / 2,
             y: (bounds.size.height + adjustedContentInset.top - adjustedContentInset.bottom) / 2
         )
     }

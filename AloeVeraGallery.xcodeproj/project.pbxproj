@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		374AE0B6236F1C9500E9E9BE /* AloeVeraGallery.h in Headers */ = {isa = PBXBuildFile; fileRef = 374AE0B4236F1C9500E9E9BE /* AloeVeraGallery.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		37E2756D2376E50600768A4E /* AloeVeraGallery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37E2756C2376E50600768A4E /* AloeVeraGallery.swift */; };
 		37E2756F2376E51F00768A4E /* GalleryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37E2756E2376E51F00768A4E /* GalleryViewController.swift */; };
 		37E275712376E58200768A4E /* GalleryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 37E275702376E58200768A4E /* GalleryViewController.xib */; };
 		37E275A42376F4B900768A4E /* AloeVeraPagedCollectionView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37E2759D2376F02100768A4E /* AloeVeraPagedCollectionView.framework */; };
@@ -25,7 +24,6 @@
 		374AE0B1236F1C9500E9E9BE /* AloeVeraGallery.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AloeVeraGallery.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		374AE0B4236F1C9500E9E9BE /* AloeVeraGallery.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AloeVeraGallery.h; sourceTree = "<group>"; };
 		374AE0B5236F1C9500E9E9BE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		37E2756C2376E50600768A4E /* AloeVeraGallery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AloeVeraGallery.swift; sourceTree = "<group>"; };
 		37E2756E2376E51F00768A4E /* GalleryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryViewController.swift; sourceTree = "<group>"; };
 		37E275702376E58200768A4E /* GalleryViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GalleryViewController.xib; sourceTree = "<group>"; };
 		37E2759D2376F02100768A4E /* AloeVeraPagedCollectionView.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AloeVeraPagedCollectionView.framework; path = Carthage/Build/iOS/AloeVeraPagedCollectionView.framework; sourceTree = "<group>"; };
@@ -70,7 +68,6 @@
 		374AE0B3236F1C9500E9E9BE /* AloeVeraGallery */ = {
 			isa = PBXGroup;
 			children = (
-				37E2756C2376E50600768A4E /* AloeVeraGallery.swift */,
 				37E2756E2376E51F00768A4E /* GalleryViewController.swift */,
 				37E275BF23771D8700768A4E /* GalleryCollectionViewLayout.swift */,
 				37E275702376E58200768A4E /* GalleryViewController.xib */,
@@ -200,7 +197,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				37E2756D2376E50600768A4E /* AloeVeraGallery.swift in Sources */,
 				37E275BE2377152700768A4E /* CollectionViewDataSource.swift in Sources */,
 				37E275C323771DF000768A4E /* ImageCollectionViewCell.swift in Sources */,
 				37E275B82377108300768A4E /* CellIdentifiable.swift in Sources */,

@@ -17,7 +17,7 @@ public protocol SectionConfiguring {
 public struct SectionConfigurator<Cell: UICollectionViewCell & CellConfigurable, ViewModel> where Cell.ViewModel == ViewModel {
     
     public enum CellSource {
-        case xib(bundle: Bundle)
+        case xib
         case code
     }
     
@@ -37,8 +37,8 @@ extension SectionConfigurator: SectionConfiguring {
     
     public func registerCell(for collectionView: UICollectionView) {
         switch cellSource {
-        case .xib(let bundle):
-            collectionView.register(UINib(nibName: Cell.identifier, bundle: bundle), forCellWithReuseIdentifier: Cell.identifier)
+        case .xib:
+            collectionView.register(UINib(nibName: Cell.identifier, bundle: Bundle(for: Cell.self)), forCellWithReuseIdentifier: Cell.identifier)
         case .code:
             collectionView.register(Cell.self, forCellWithReuseIdentifier: Cell.identifier)
         }

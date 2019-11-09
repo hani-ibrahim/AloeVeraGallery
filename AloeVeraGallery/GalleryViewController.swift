@@ -11,17 +11,21 @@ import UIKit
 
 open class GalleryViewController: UIViewController {
     
-    @IBOutlet private var collectionView: UICollectionView!
-    @IBOutlet private var collectionViewLayout: PagedCollectionViewFlowLayout!
-    @IBOutlet private var closeButton: UIButton!
-    @IBOutlet private var pageControl: UIPageControl!
+    @IBOutlet public private(set) var collectionView: UICollectionView!
+    @IBOutlet public private(set) var collectionViewLayout: PagedCollectionViewFlowLayout!
+    @IBOutlet public private(set) var closeButton: UIButton!
+    @IBOutlet public private(set) var pageControl: UIPageControl!
+    
+    @IBOutlet private var rightConstraint: NSLayoutConstraint!
     
     private let dataSource: CollectionViewDataSource
-    private let options: AloeVeraGallery.Options
+    private let pageSpacing: CGFloat
+    private let startIndex: Int?
     
-    public init(sections: [SectionConfiguring], options: AloeVeraGallery.Options) {
+    public init(sections: [SectionConfiguring], pageSpacing: CGFloat, startIndex: Int?) {
         self.dataSource = CollectionViewDataSource(sections: sections)
-        self.options = options
+        self.pageSpacing = pageSpacing
+        self.startIndex = startIndex
         super.init(nibName: nil, bundle: Bundle(for: GalleryViewController.self))
     }
     
@@ -35,13 +39,12 @@ open class GalleryViewController: UIViewController {
     
     open override func viewDidLoad() {
         super.viewDidLoad()
-        collectionView.dataSource = dataSource
-        setupUI()
+        setupView()
     }
     
     open override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        collectionViewLayout.willRotate()
+        collectionViewLayout.collectionViewSizeWillChange()
     }
     
     @IBAction private func closeButtonPressed() {
@@ -50,25 +53,19 @@ open class GalleryViewController: UIViewController {
 }
 
 private extension GalleryViewController {
-    func setupUI() {
-        
-        closeButton.configure(for: options.closeButton)
-        collectionView.backgroundColor = options.backgroundColor
+    func setupView() {
+        setupCollectionView()
+        setup(pageSpacing: pageSpacing)
     }
-}
-
-private extension UIButton {
-    func configure(for closeButton: AloeVeraGallery.CloseButton) {
-        switch closeButton {
-        case .hidden:
-            isHidden = true
-        case .visible(let properties):
-            isHidden = false
-            setTitle(properties.title, for: .normal)
-            titleLabel?.font = properties.font
-            setTitleColor(properties.textColor, for: .normal)
-            setImage(properties.image, for: .normal)
-            backgroundColor = properties.backgroundColor
-        }
+    
+    func setupCollectionView() {
+        collectionView.dataSource = dataSource
+        dataSource.registerCells(in: collectionView)
+    }
+    
+    func setup(pageSpacing: CGFloat) {
+        collectionView.contentInset.right = pageSpacing
+        collectionViewLayout.pageSpacing = pageSpacing
+        rightConstraint.constant = pageSpacing
     }
 }
