@@ -12,6 +12,13 @@
 		37E2756F2376E51F00768A4E /* GalleryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37E2756E2376E51F00768A4E /* GalleryViewController.swift */; };
 		37E275712376E58200768A4E /* GalleryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 37E275702376E58200768A4E /* GalleryViewController.xib */; };
 		37E275A42376F4B900768A4E /* AloeVeraPagedCollectionView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37E2759D2376F02100768A4E /* AloeVeraPagedCollectionView.framework */; };
+		37E275B82377108300768A4E /* CellIdentifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37E275B72377108300768A4E /* CellIdentifiable.swift */; };
+		37E275BA2377117F00768A4E /* CellConfigurable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37E275B92377117F00768A4E /* CellConfigurable.swift */; };
+		37E275BC2377126400768A4E /* SectionConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37E275BB2377126400768A4E /* SectionConfigurator.swift */; };
+		37E275BE2377152700768A4E /* CollectionViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37E275BD2377152700768A4E /* CollectionViewDataSource.swift */; };
+		37E275C023771D8700768A4E /* GalleryCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37E275BF23771D8700768A4E /* GalleryCollectionViewLayout.swift */; };
+		37E275C323771DF000768A4E /* ImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37E275C223771DF000768A4E /* ImageCollectionViewCell.swift */; };
+		37E275C52377217900768A4E /* ImageCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 37E275C42377217900768A4E /* ImageCollectionViewCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +29,13 @@
 		37E2756E2376E51F00768A4E /* GalleryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryViewController.swift; sourceTree = "<group>"; };
 		37E275702376E58200768A4E /* GalleryViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GalleryViewController.xib; sourceTree = "<group>"; };
 		37E2759D2376F02100768A4E /* AloeVeraPagedCollectionView.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AloeVeraPagedCollectionView.framework; path = Carthage/Build/iOS/AloeVeraPagedCollectionView.framework; sourceTree = "<group>"; };
+		37E275B72377108300768A4E /* CellIdentifiable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellIdentifiable.swift; sourceTree = "<group>"; };
+		37E275B92377117F00768A4E /* CellConfigurable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellConfigurable.swift; sourceTree = "<group>"; };
+		37E275BB2377126400768A4E /* SectionConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionConfigurator.swift; sourceTree = "<group>"; };
+		37E275BD2377152700768A4E /* CollectionViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewDataSource.swift; sourceTree = "<group>"; };
+		37E275BF23771D8700768A4E /* GalleryCollectionViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryCollectionViewLayout.swift; sourceTree = "<group>"; };
+		37E275C223771DF000768A4E /* ImageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCollectionViewCell.swift; sourceTree = "<group>"; };
+		37E275C42377217900768A4E /* ImageCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ImageCollectionViewCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,7 +72,10 @@
 			children = (
 				37E2756C2376E50600768A4E /* AloeVeraGallery.swift */,
 				37E2756E2376E51F00768A4E /* GalleryViewController.swift */,
+				37E275BF23771D8700768A4E /* GalleryCollectionViewLayout.swift */,
 				37E275702376E58200768A4E /* GalleryViewController.xib */,
+				37E275C123771DDC00768A4E /* Cells */,
+				37E275B62377102700768A4E /* DataSource */,
 				374AE0BC236F1D0200E9E9BE /* Supporting files */,
 			);
 			path = AloeVeraGallery;
@@ -79,6 +96,26 @@
 				37E2759D2376F02100768A4E /* AloeVeraPagedCollectionView.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		37E275B62377102700768A4E /* DataSource */ = {
+			isa = PBXGroup;
+			children = (
+				37E275B72377108300768A4E /* CellIdentifiable.swift */,
+				37E275B92377117F00768A4E /* CellConfigurable.swift */,
+				37E275BB2377126400768A4E /* SectionConfigurator.swift */,
+				37E275BD2377152700768A4E /* CollectionViewDataSource.swift */,
+			);
+			path = DataSource;
+			sourceTree = "<group>";
+		};
+		37E275C123771DDC00768A4E /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				37E275C223771DF000768A4E /* ImageCollectionViewCell.swift */,
+				37E275C42377217900768A4E /* ImageCollectionViewCell.xib */,
+			);
+			path = Cells;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -151,6 +188,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				37E275C52377217900768A4E /* ImageCollectionViewCell.xib in Resources */,
 				37E275712376E58200768A4E /* GalleryViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -163,6 +201,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				37E2756D2376E50600768A4E /* AloeVeraGallery.swift in Sources */,
+				37E275BE2377152700768A4E /* CollectionViewDataSource.swift in Sources */,
+				37E275C323771DF000768A4E /* ImageCollectionViewCell.swift in Sources */,
+				37E275B82377108300768A4E /* CellIdentifiable.swift in Sources */,
+				37E275BC2377126400768A4E /* SectionConfigurator.swift in Sources */,
+				37E275BA2377117F00768A4E /* CellConfigurable.swift in Sources */,
+				37E275C023771D8700768A4E /* GalleryCollectionViewLayout.swift in Sources */,
 				37E2756F2376E51F00768A4E /* GalleryViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
