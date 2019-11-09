@@ -11,6 +11,7 @@
 		37E2756D2376E50600768A4E /* AloeVeraGallery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37E2756C2376E50600768A4E /* AloeVeraGallery.swift */; };
 		37E2756F2376E51F00768A4E /* GalleryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37E2756E2376E51F00768A4E /* GalleryViewController.swift */; };
 		37E275712376E58200768A4E /* GalleryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 37E275702376E58200768A4E /* GalleryViewController.xib */; };
+		37E2759F2376F08D00768A4E /* AloeVeraPagedCollectionView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37E2759D2376F02100768A4E /* AloeVeraPagedCollectionView.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -33,6 +34,7 @@
 		37E2756C2376E50600768A4E /* AloeVeraGallery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AloeVeraGallery.swift; sourceTree = "<group>"; };
 		37E2756E2376E51F00768A4E /* GalleryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryViewController.swift; sourceTree = "<group>"; };
 		37E275702376E58200768A4E /* GalleryViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GalleryViewController.xib; sourceTree = "<group>"; };
+		37E2759D2376F02100768A4E /* AloeVeraPagedCollectionView.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AloeVeraPagedCollectionView.framework; path = Carthage/Build/iOS/AloeVeraPagedCollectionView.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -40,6 +42,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				37E2759F2376F08D00768A4E /* AloeVeraPagedCollectionView.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -86,6 +89,7 @@
 		37E275662376E3F400768A4E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				37E2759D2376F02100768A4E /* AloeVeraPagedCollectionView.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

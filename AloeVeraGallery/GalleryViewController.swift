@@ -6,7 +6,7 @@
 //  Copyright © 2019 Hani. All rights reserved.
 //
 
-//import AloeVeraPagedCollectionView
+import AloeVeraPagedCollectionView
 import UIKit
 
 open class GalleryViewController: UIViewController {
