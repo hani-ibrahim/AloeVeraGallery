@@ -7,20 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		376451D5234BBBC300CE6A1E /* CenteredItemLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 376451D4234BBBC300CE6A1E /* CenteredItemLocator.swift */; };
-		37A8C11D236E3C9B00C9D896 /* PagedCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37A8C11C236E3C9B00C9D896 /* PagedCollectionViewFlowLayout.swift */; };
 		37D97FFD2301E15100273C52 /* AloeVeraPagedCollectionView.h in Headers */ = {isa = PBXBuildFile; fileRef = 37D97FFB2301E15100273C52 /* AloeVeraPagedCollectionView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		37E275CA2377783100768A4E /* PagedCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37E275C92377783100768A4E /* PagedCollectionView.swift */; };
+		37E9945C23781A6300188F08 /* PagedCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37E9945B23781A6300188F08 /* PagedCollectionViewLayout.swift */; };
+		37E9945E2378436700188F08 /* CenteredItemLocating.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37E9945D2378436700188F08 /* CenteredItemLocating.swift */; };
 		37F3C934236DE7F4009C864E /* CenteredItemCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37F3C933236DE7F4009C864E /* CenteredItemCollectionViewFlowLayout.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		376451D4234BBBC300CE6A1E /* CenteredItemLocator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CenteredItemLocator.swift; sourceTree = "<group>"; };
-		37A8C11C236E3C9B00C9D896 /* PagedCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagedCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
 		37D97FF82301E15100273C52 /* AloeVeraPagedCollectionView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AloeVeraPagedCollectionView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		37D97FFB2301E15100273C52 /* AloeVeraPagedCollectionView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AloeVeraPagedCollectionView.h; sourceTree = "<group>"; };
 		37D97FFC2301E15100273C52 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		37E275C92377783100768A4E /* PagedCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagedCollectionView.swift; sourceTree = "<group>"; };
+		37E9945B23781A6300188F08 /* PagedCollectionViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagedCollectionViewLayout.swift; sourceTree = "<group>"; };
+		37E9945D2378436700188F08 /* CenteredItemLocating.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CenteredItemLocating.swift; sourceTree = "<group>"; };
 		37F3C933236DE7F4009C864E /* CenteredItemCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CenteredItemCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -55,9 +55,9 @@
 			isa = PBXGroup;
 			children = (
 				37E275C92377783100768A4E /* PagedCollectionView.swift */,
-				37A8C11C236E3C9B00C9D896 /* PagedCollectionViewFlowLayout.swift */,
+				37E9945B23781A6300188F08 /* PagedCollectionViewLayout.swift */,
 				37F3C933236DE7F4009C864E /* CenteredItemCollectionViewFlowLayout.swift */,
-				376451D4234BBBC300CE6A1E /* CenteredItemLocator.swift */,
+				37E9945D2378436700188F08 /* CenteredItemLocating.swift */,
 				37D980032301E1AB00273C52 /* Supporting files */,
 			);
 			path = AloeVeraPagedCollectionView;
@@ -153,9 +153,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				37E275CA2377783100768A4E /* PagedCollectionView.swift in Sources */,
-				37A8C11D236E3C9B00C9D896 /* PagedCollectionViewFlowLayout.swift in Sources */,
-				376451D5234BBBC300CE6A1E /* CenteredItemLocator.swift in Sources */,
+				37E9945C23781A6300188F08 /* PagedCollectionViewLayout.swift in Sources */,
 				37F3C934236DE7F4009C864E /* CenteredItemCollectionViewFlowLayout.swift in Sources */,
+				37E9945E2378436700188F08 /* CenteredItemLocating.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

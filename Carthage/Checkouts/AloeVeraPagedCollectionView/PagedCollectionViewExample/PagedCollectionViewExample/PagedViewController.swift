@@ -17,16 +17,12 @@ final class PagedViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        pagedCollectionView.pageSpacing = 50
-        pagedCollectionView.collectionViewLayout.scrollDirection = .horizontal
+        pagedCollectionView.collectionViewLayout.pageSpacing = 50
+        pagedCollectionView.collectionViewLayout.pageInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        pagedCollectionView.collectionViewLayout.shouldRespectAdjustedContentInset = false
         pagedCollectionView.collectionView.dataSource = self
         pagedCollectionView.collectionView.registerCell(ofType: PagedCollectionViewCell.self)
         pagedCollectionView.configure()
-    }
-    
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
-        pagedCollectionView.collectionViewLayout.collectionViewSizeWillChange()
     }
 }
 

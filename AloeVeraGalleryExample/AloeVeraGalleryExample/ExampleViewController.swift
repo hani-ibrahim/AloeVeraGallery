@@ -13,6 +13,7 @@ import UIKit
 final class ExampleViewController: UIViewController {
     
     @IBOutlet private var pagedCollectionView: PagedCollectionView!
+    private var currentIndexPath: IndexPath?
     
     private lazy var dataSource = CollectionViewDataSource(sections: [section])
     private lazy var section: ImageCollectionViewCell.Section = {
@@ -27,18 +28,15 @@ final class ExampleViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        pagedCollectionView.collectionViewLayout.invalidateLayout()
-    }
-    
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
-        pagedCollectionView.collectionViewLayout.collectionViewSizeWillChange()
+        if let indexPath = currentIndexPath {
+            pagedCollectionView.collectionViewLayout.scrollToItem(at: indexPath)
+        }
     }
 }
 
 private extension ExampleViewController {
     func setupView() {
-        pagedCollectionView.pageSpacing = 20
+        pagedCollectionView.collectionViewLayout.pageSpacing = 20
         pagedCollectionView.collectionViewLayout.scrollDirection = .horizontal
         pagedCollectionView.collectionView.dataSource = dataSource
         pagedCollectionView.collectionView.delegate = self
@@ -49,15 +47,19 @@ private extension ExampleViewController {
 
 extension ExampleViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let viewController = GalleryViewController(sections: [section], pageSpacing: 50, startIndexPath: indexPath)
-        viewController.modalPresentationStyle = .fullScreen
+        let viewController = GalleryViewController.makeViewController()
+        viewController.sections = [section]
+        viewController.pageSpacing = 50
+        viewController.startIndexPath = indexPath
         viewController.delegate = self
+        viewController.modalPresentationStyle = .fullScreen
         present(viewController, animated: true)
     }
 }
 
 extension ExampleViewController: GalleryDelegate {
     func gallery(galleryViewController: GalleryViewController, didScrollToItemAt indexPath: IndexPath) {
-        pagedCollectionView.scrollToItem(at: indexPath)
+        pagedCollectionView.collectionViewLayout.scrollToItem(at: indexPath)
+        currentIndexPath = indexPath
     }
 }

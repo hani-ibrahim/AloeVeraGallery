@@ -6,20 +6,21 @@
 
 Main Componenets
 - `PagedCollectionView`
-    - Uses `PagedCollectionViewFlowLayout` to layout the cells during rotation
-    - Adds the `UICollectionView` inside a `UIView` to enable the paging support
-    - <b>Available customizations</b> (Check `PagedCollectionView.pageSpacing`):
-        - Set spacing between pages that is only visible during scrolling
-- `PagedCollectionViewFlowLayout`
-    - Scales the cells during rotation so they always cover the whole page.
-    - <b>Available customizations</b>: (Check `PagedCollectionViewFlowLayout.pageSpacing`)
-        - Set spacing between pages that is only visible during scrolling
-        - Set the initial indexPath of the collection view
+    - Uses `PagedCollectionViewLayout` to layout the cells during rotation.
+    - Adds the `UICollectionView` inside a `UIView` to enable the paging support.
+- `PagedCollectionViewLayout`
+    - Arrange the items to be displayed in full collection view size and adjust its size during rotation.
+    - <b>Available customizations</b>:
+        - `pageSpacing: CGFloat`: Spacing between the pages that is only visible during scrolling
+        - `pageInset: UIEdgeInsets`: The insets for each individual page
+        - `collectionViewInset: UIEdgeInsets`: Insets for the collection view area that is not visible, helpful when the collection view size is bigger than its superview. Used to enable paging support with spaces between pages.
+        - `shouldRespectAdjustedContentInset: Bool`: When set to `false` -> the items will fill the whole available space
+        - `scrollDirection: UICollectionView.ScrollDirection`: The direction of scrolling `horizontal` or `vertical`
         <br><br>
     <img width="600" height="520" src="Resources/paged-example.gif">
 - `CenteredItemCollectionViewFlowLayout`
     - Scrolls the collectionView during rotation to show the same item that was visible before rotation
-    - <b>Available customizations</b> (Check `CenteredItemLocatorDelegate`):
+    - <b>Available customizations</b> (Check `CenteredItemLocatingDelegate`):
         - Center of the collection view
         - Cells to exclude during calculation
         - Ability to reject scrolling

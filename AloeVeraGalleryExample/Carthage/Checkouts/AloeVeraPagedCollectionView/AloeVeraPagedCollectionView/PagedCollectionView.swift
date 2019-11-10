@@ -9,22 +9,16 @@
 import UIKit
 
 /// Simple UIView with embded CollectionView that support paging scrolling with spaces and adjust rotation
-/// ⚠️ You must call `collectionViewLayout.collectionViewSizeWillChange()` before the rotation start ... call it from `UIViewController.viewWillTransition` function
+/// This class is not a mandatory to use this library ... you can also use `PagedCollectionViewLayout` directly
 public class PagedCollectionView: UIView {
     
     public lazy var collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout)
+    public let collectionViewLayout = PagedCollectionViewLayout()
     
-    /// Set the space between pages horizontally or vertically
-    public var pageSpacing: CGFloat = 0 {
-        didSet {
-            configure()
-        }
-    }
-    
-    public let collectionViewLayout = PagedCollectionViewFlowLayout()
-    
-    private var rightConstraint: NSLayoutConstraint!
+    private var topConstraint: NSLayoutConstraint!
     private var bottomConstraint: NSLayoutConstraint!
+    private var rightConstraint: NSLayoutConstraint!
+    private var leftConstraint: NSLayoutConstraint!
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -36,36 +30,23 @@ public class PagedCollectionView: UIView {
         setup()
     }
     
-    /// Scroll the collection view to the given index
-    public func scrollToItem(at indexPath: IndexPath) {
-        collectionViewLayout.centeredItemLocator.scrollToItem(at: indexPath, toBeCenteredIn: collectionView)
-    }
-    
     /// Readjust the collectionView to support paging properly
-    /// You might need to call this function in case you changed some properties like `scrollDirection`
+    /// You might need to call this function in case you changed some properties in `collectionViewLayout`
     public func configure() {
+        let pageSpacing = collectionViewLayout.pageSpacing
+        let contentInset: UIEdgeInsets
         if collectionViewLayout.scrollDirection == .horizontal {
-            collectionView.contentInset.right = pageSpacing
-            collectionView.contentInset.bottom = 0
-            collectionView.scrollIndicatorInsets.right = pageSpacing
-            collectionView.scrollIndicatorInsets.bottom = 0
-            rightConstraint?.constant = pageSpacing
-            bottomConstraint?.constant = 0
+            contentInset = UIEdgeInsets(top: 0, left: pageSpacing / 2, bottom: 0, right: pageSpacing / 2)
         } else {
-            collectionView.contentInset.right = 0
-            collectionView.contentInset.bottom = pageSpacing
-            rightConstraint?.constant = 0
-            bottomConstraint?.constant = pageSpacing
-            collectionView.scrollIndicatorInsets.right = 0
-            collectionView.scrollIndicatorInsets.bottom = pageSpacing
+            contentInset = UIEdgeInsets(top: pageSpacing / 2, left: 0, bottom: pageSpacing / 2, right: 0)
         }
-        collectionViewLayout.pageSpacing = pageSpacing
-    }
-    
-    public override func layoutSubviews() {
-        /// Fixing bug where some constraints mismatch might appear in the console during rotation
-        collectionViewLayout.invalidateLayout()
-        super.layoutSubviews()
+
+        collectionViewLayout.collectionViewInset = contentInset
+        collectionView.scrollIndicatorInsets = contentInset
+        topConstraint.constant = contentInset.top
+        bottomConstraint.constant = contentInset.bottom
+        rightConstraint.constant = contentInset.right
+        leftConstraint.constant = contentInset.left
     }
 }
 
@@ -77,15 +58,12 @@ private extension PagedCollectionView {
         collectionView.isPagingEnabled = true
         collectionView.backgroundColor = backgroundColor
         
-        rightConstraint = collectionView.rightAnchor.constraint(equalTo: rightAnchor)
+        topConstraint = topAnchor.constraint(equalTo: collectionView.topAnchor)
         bottomConstraint = collectionView.bottomAnchor.constraint(equalTo: bottomAnchor)
+        rightConstraint = collectionView.rightAnchor.constraint(equalTo: rightAnchor)
+        leftConstraint = leftAnchor.constraint(equalTo: collectionView.leftAnchor)
         
-        NSLayoutConstraint.activate([
-            rightConstraint,
-            bottomConstraint,
-            collectionView.topAnchor.constraint(equalTo: topAnchor),
-            collectionView.leftAnchor.constraint(equalTo: leftAnchor)
-        ])
+        NSLayoutConstraint.activate([topConstraint, bottomConstraint, rightConstraint, leftConstraint])
         
         configure()
     }

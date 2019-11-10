@@ -15,39 +15,31 @@ public protocol GalleryDelegate: AnyObject {
 
 open class GalleryViewController: UIViewController {
     
+    public static func makeViewController() -> GalleryViewController {
+        GalleryViewController(nibName: nil, bundle: Bundle(for: GalleryViewController.self))
+    }
+    
     @IBOutlet public private(set) var pagedCollectionView: PagedCollectionView!
     @IBOutlet public private(set) var closeButton: UIButton!
     @IBOutlet public private(set) var pageControl: UIPageControl!
     
     public weak var delegate: GalleryDelegate?
+    public var pageSpacing: CGFloat = 0
+    public var startIndexPath: IndexPath?
+    public var sections: [SectionConfiguring] = []
     
-    private let dataSource: CollectionViewDataSource
-    private let pageSpacing: CGFloat
-    private let startIndexPath: IndexPath?
-    
-    public init(sections: [SectionConfiguring], pageSpacing: CGFloat, startIndexPath: IndexPath?) {
-        self.dataSource = CollectionViewDataSource(sections: sections)
-        self.pageSpacing = pageSpacing
-        self.startIndexPath = startIndexPath
-        super.init(nibName: nil, bundle: Bundle(for: GalleryViewController.self))
-    }
-    
-    public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-        fatalError("Please use init(sections:pageSpacing:startIndex) function to initialize GalleryViewController")
-    }
-    
-    public required init?(coder: NSCoder) {
-        fatalError("Please use init(sections:pageSpacing:startIndex) function to initialize GalleryViewController")
-    }
+    private lazy var dataSource = CollectionViewDataSource(sections: sections)
     
     open override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
     }
     
-    open override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
-        collectionViewLayout.collectionViewSizeWillChange()
+    open override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        if let startIndexPath = startIndexPath {
+            pagedCollectionView.collectionViewLayout.scrollToItem(at: startIndexPath)
+        }
     }
     
     @IBAction private func closeButtonPressed() {
@@ -72,33 +64,35 @@ extension GalleryViewController: UICollectionViewDelegate {
 }
 
 private extension GalleryViewController {
-    var collectionView: UICollectionView {
-        pagedCollectionView.collectionView
-    }
-    
-    var collectionViewLayout: PagedCollectionViewFlowLayout {
-        pagedCollectionView.collectionViewLayout
-    }
-    
     func setupView() {
-        pageControl.numberOfPages = dataSource.totalNumberOfItems
-        collectionViewLayout.initialIndexPath = startIndexPath
-        collectionViewLayout.scrollDirection = .horizontal
-        collectionView.showsHorizontalScrollIndicator = false
-        collectionView.dataSource = dataSource
-        collectionView.delegate = self
-        dataSource.registerCells(in: collectionView)
-        pagedCollectionView.pageSpacing = pageSpacing
-        if let startIndexPath = startIndexPath {
-            pageControl.currentPage = dataSource.absoluteIndex(forItemAt: startIndexPath)
-        }
+        setupPageControl()
+        setupCollectionView()
     }
     
     func scrollingStopped() {
-        guard let currentIndexPath = collectionViewLayout.centeredItemLocator.locateCenteredItem(in: collectionView, bounds: collectionView.bounds) else {
+        guard let currentIndexPath = pagedCollectionView.collectionViewLayout.centeredItemIndexPath(in: pagedCollectionView.collectionView.bounds) else {
             return
         }
         delegate?.gallery(galleryViewController: self, didScrollToItemAt: currentIndexPath)
         pageControl.currentPage = dataSource.absoluteIndex(forItemAt: currentIndexPath)
+    }
+    
+    func setupPageControl() {
+        pageControl.numberOfPages = dataSource.totalNumberOfItems
+        if let startIndexPath = startIndexPath {
+            pageControl.currentPage = dataSource.absoluteIndex(forItemAt: startIndexPath)
+        } else {
+            pageControl.currentPage = 0
+        }
+    }
+    
+    func setupCollectionView() {
+        pagedCollectionView.collectionViewLayout.pageSpacing = pageSpacing
+        pagedCollectionView.collectionViewLayout.shouldRespectAdjustedContentInset = false
+        pagedCollectionView.collectionView.showsHorizontalScrollIndicator = false
+        pagedCollectionView.collectionView.dataSource = dataSource
+        pagedCollectionView.collectionView.delegate = self
+        dataSource.registerCells(in: pagedCollectionView.collectionView)
+        pagedCollectionView.configure()
     }
 }
