@@ -15,7 +15,11 @@ extension NSObject {
 }
 
 extension UICollectionView {
-    func dequeueCell<T: NSObject>(ofType type: T.Type, at indexPath: IndexPath) -> T {
+    func dequeueCell<T: UICollectionViewCell>(ofType type: T.Type, at indexPath: IndexPath) -> T {
         dequeueReusableCell(withReuseIdentifier: T.identifier, for: indexPath) as! T
+    }
+    
+    func registerCell<T: UICollectionViewCell>(ofType type: T.Type) {
+        register(UINib(nibName: T.identifier, bundle: Bundle(for: T.self)), forCellWithReuseIdentifier: T.identifier)
     }
 }

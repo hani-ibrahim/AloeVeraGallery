@@ -22,17 +22,9 @@ open class PagedCollectionViewFlowLayout: CenteredItemCollectionViewFlowLayout {
     
     private var shouldConfigurePage = true
     
-    open override func collectionViewSizeWillChange() {
-        super.collectionViewSizeWillChange()
-        invalidateLayout()
-    }
-    
     open override func prepare() {
-        defer {
-            super.prepare()
-        }
-        
         guard let collectionView = collectionView else {
+            super.prepare()
             return
         }
         
@@ -44,7 +36,16 @@ open class PagedCollectionViewFlowLayout: CenteredItemCollectionViewFlowLayout {
             shouldConfigurePage = false
         }
         
-        itemSize = collectionView.bounds.inset(by: collectionView.contentInset).size
+        let newItemSize = collectionView.bounds.inset(by: collectionView.contentInset).size
+        let shouldInvalidate = itemSize != newItemSize
+        itemSize = newItemSize
+        
+        super.prepare()
+        
+        /// Fixing bug in UICollectionViewFlowLayout where the `itemSize` is not applied except with `invalidateLayout` is called after `prepare`
+        if shouldInvalidate {
+            invalidateLayout()
+        }
     }
     
     open override func initialLayoutAttributesForAppearingItem(at itemIndexPath: IndexPath) -> UICollectionViewLayoutAttributes? {

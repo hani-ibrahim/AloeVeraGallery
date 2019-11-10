@@ -11,21 +11,22 @@ import AloeVeraPagedCollectionView
 
 final class PagedViewController: UIViewController {
     
-    @IBOutlet private var collectionView: UICollectionView!
-    @IBOutlet private var collectionViewLayout: PagedCollectionViewFlowLayout!
+    @IBOutlet private var pagedCollectionView: PagedCollectionView!
     
     private let data = (0..<10).map { String($0) }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        collectionViewLayout.pageInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-        collectionViewLayout.pageSpacing = 50
-        collectionViewLayout.shouldRespectAdjustedContentInset = false
+        pagedCollectionView.pageSpacing = 50
+        pagedCollectionView.collectionViewLayout.scrollDirection = .horizontal
+        pagedCollectionView.collectionView.dataSource = self
+        pagedCollectionView.collectionView.registerCell(ofType: PagedCollectionViewCell.self)
+        pagedCollectionView.configure()
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        collectionViewLayout.willRotate()
+        pagedCollectionView.collectionViewLayout.collectionViewSizeWillChange()
     }
 }
 
@@ -35,7 +36,7 @@ extension PagedViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueCell(ofType: TestCollectionViewCell.self, at: indexPath)
+        let cell = collectionView.dequeueCell(ofType: PagedCollectionViewCell.self, at: indexPath)
         cell.titleLabel.text = data[indexPath.row]
         return cell
     }

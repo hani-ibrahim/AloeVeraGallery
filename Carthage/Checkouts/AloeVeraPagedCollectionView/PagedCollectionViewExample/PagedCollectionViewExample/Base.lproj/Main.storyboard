@@ -27,7 +27,7 @@
                                     <inset key="sectionInset" minX="20" minY="20" maxX="20" maxY="20"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="TestCollectionViewCell" id="N9o-H0-UMc" customClass="TestCollectionViewCell" customModule="PagedCollectionViewExample" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="CenteredItemCollectionViewCell" id="N9o-H0-UMc" customClass="CenteredItemCollectionViewCell" customModule="PagedCollectionViewExample" customModuleProvider="target">
                                         <rect key="frame" x="20" y="20" width="50" height="50"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="ifj-D5-aC6">
@@ -169,61 +169,23 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="oOg-Na-nJI">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4Xc-GM-cZ9" customClass="PagedCollectionView" customModule="AloeVeraPagedCollectionView">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="z0n-Ih-mku" customClass="PagedCollectionViewFlowLayout" customModule="AloeVeraPagedCollectionView">
-                                    <size key="itemSize" width="200" height="200"/>
-                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                    <inset key="sectionInset" minX="20" minY="20" maxX="20" maxY="20"/>
-                                </collectionViewFlowLayout>
-                                <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="TestCollectionViewCell" id="ghz-M5-YW1" customClass="TestCollectionViewCell" customModule="PagedCollectionViewExample" customModuleProvider="target">
-                                        <rect key="frame" x="20" y="20" width="200" height="200"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="WdI-xj-2Nn">
-                                            <rect key="frame" x="0.0" y="0.0" width="200" height="200"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="888" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DdL-Ok-K3v">
-                                                    <rect key="frame" x="0.0" y="0.0" width="200" height="200"/>
-                                                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="40"/>
-                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstAttribute="trailing" secondItem="DdL-Ok-K3v" secondAttribute="trailing" id="Nsl-jw-Inc"/>
-                                                <constraint firstItem="DdL-Ok-K3v" firstAttribute="top" secondItem="WdI-xj-2Nn" secondAttribute="top" id="Z8H-op-Gsn"/>
-                                                <constraint firstItem="DdL-Ok-K3v" firstAttribute="leading" secondItem="WdI-xj-2Nn" secondAttribute="leading" id="iYQ-xE-X2c"/>
-                                                <constraint firstAttribute="bottom" secondItem="DdL-Ok-K3v" secondAttribute="bottom" id="uCR-KF-kI6"/>
-                                            </constraints>
-                                        </collectionViewCellContentView>
-                                        <color key="backgroundColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <connections>
-                                            <outlet property="titleLabel" destination="DdL-Ok-K3v" id="VkK-Y8-26d"/>
-                                        </connections>
-                                    </collectionViewCell>
-                                </cells>
-                                <connections>
-                                    <outlet property="dataSource" destination="DeS-rl-5OL" id="2j2-7Y-qGL"/>
-                                </connections>
-                            </collectionView>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
-                            <constraint firstItem="oOg-Na-nJI" firstAttribute="leading" secondItem="Gfi-IG-XQT" secondAttribute="leading" id="0QL-ub-cNG"/>
-                            <constraint firstItem="oOg-Na-nJI" firstAttribute="top" secondItem="Gfi-IG-XQT" secondAttribute="top" id="OjI-4u-Uk0"/>
-                            <constraint firstAttribute="trailing" secondItem="oOg-Na-nJI" secondAttribute="trailing" id="XfE-MY-Wqd"/>
-                            <constraint firstAttribute="bottom" secondItem="oOg-Na-nJI" secondAttribute="bottom" id="xbu-b3-T6l"/>
+                            <constraint firstAttribute="trailing" secondItem="4Xc-GM-cZ9" secondAttribute="trailing" id="Qdo-xp-ITt"/>
+                            <constraint firstAttribute="bottom" secondItem="4Xc-GM-cZ9" secondAttribute="bottom" id="eCh-mH-nsk"/>
+                            <constraint firstItem="4Xc-GM-cZ9" firstAttribute="top" secondItem="Gfi-IG-XQT" secondAttribute="top" id="in8-3N-Y4f"/>
+                            <constraint firstItem="4Xc-GM-cZ9" firstAttribute="leading" secondItem="Gfi-IG-XQT" secondAttribute="leading" id="yID-Td-Aii"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="sge-6q-2rD"/>
                     </view>
                     <navigationItem key="navigationItem" title="Paged" id="8hK-PM-bGD"/>
                     <connections>
-                        <outlet property="collectionView" destination="oOg-Na-nJI" id="SSf-Vb-WET"/>
-                        <outlet property="collectionViewLayout" destination="z0n-Ih-mku" id="oOU-eq-T47"/>
+                        <outlet property="pagedCollectionView" destination="4Xc-GM-cZ9" id="z0S-vV-liR"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QRD-WA-6IR" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

@@ -33,7 +33,7 @@ final class CenteredItemViewController: UIViewController {
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        collectionViewLayout.willRotate()
+        collectionViewLayout.collectionViewSizeWillChange()
     }
 }
 
@@ -43,7 +43,7 @@ extension CenteredItemViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueCell(ofType: TestCollectionViewCell.self, at: indexPath)
+        let cell = collectionView.dequeueCell(ofType: CenteredItemCollectionViewCell.self, at: indexPath)
         cell.titleLabel.text = data[indexPath.row]
         cell.backgroundColor = indexPath.item == 162 ? UIColor(red: 0.1, green: 0.1, blue: 0.8, alpha: 1) : .red
         return cell

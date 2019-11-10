@@ -11,12 +11,9 @@ import UIKit
 
 open class GalleryViewController: UIViewController {
     
-    @IBOutlet public private(set) var collectionView: UICollectionView!
-    @IBOutlet public private(set) var collectionViewLayout: PagedCollectionViewFlowLayout!
+    @IBOutlet public private(set) var pagedCollectionView: PagedCollectionView!
     @IBOutlet public private(set) var closeButton: UIButton!
     @IBOutlet public private(set) var pageControl: UIPageControl!
-    
-    @IBOutlet private var rightConstraint: NSLayoutConstraint!
     
     private let dataSource: CollectionViewDataSource
     private let pageSpacing: CGFloat
@@ -30,11 +27,11 @@ open class GalleryViewController: UIViewController {
     }
     
     public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-        fatalError("init(nibName:) has not been implemented")
+        fatalError("Please use init(sections:pageSpacing:startIndex) function to initialize GalleryViewController")
     }
     
-    required public init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    public required init?(coder: NSCoder) {
+        fatalError("Please use init(sections:pageSpacing:startIndex) function to initialize GalleryViewController")
     }
     
     open override func viewDidLoad() {
@@ -44,7 +41,7 @@ open class GalleryViewController: UIViewController {
     
     open override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        collectionViewLayout.collectionViewSizeWillChange()
+        pagedCollectionView.collectionViewLayout.collectionViewSizeWillChange()
     }
     
     @IBAction private func closeButtonPressed() {
@@ -54,18 +51,10 @@ open class GalleryViewController: UIViewController {
 
 private extension GalleryViewController {
     func setupView() {
-        setupCollectionView()
-        setup(pageSpacing: pageSpacing)
-    }
-    
-    func setupCollectionView() {
-        collectionView.dataSource = dataSource
-        dataSource.registerCells(in: collectionView)
-    }
-    
-    func setup(pageSpacing: CGFloat) {
-        collectionView.contentInset.right = pageSpacing
-        collectionViewLayout.pageSpacing = pageSpacing
-        rightConstraint.constant = pageSpacing
+        pagedCollectionView.pageSpacing = pageSpacing
+        pagedCollectionView.collectionView.dataSource = dataSource
+        pagedCollectionView.collectionViewLayout.scrollDirection = .horizontal
+        dataSource.registerCells(in: pagedCollectionView.collectionView)
+        pagedCollectionView.configure()
     }
 }

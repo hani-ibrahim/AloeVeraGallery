@@ -2,9 +2,20 @@
 <img width="600" height="450" src="Resources/title.png">
 </p>
 
-## Collection view Layout with simple paging and rotation support
+## UICollectionView with simple paging and rotation support
 
-There are two CollectionViewFlowLayout:
+Main Componenets
+- `PagedCollectionView`
+    - Uses `PagedCollectionViewFlowLayout` to layout the cells during rotation
+    - Adds the `UICollectionView` inside a `UIView` to enable the paging support
+    - <b>Available customizations</b> (Check `PagedCollectionView.pageSpacing`):
+        - Set spacing between pages that is only visible during scrolling
+- `PagedCollectionViewFlowLayout`
+    - Scales the cells during rotation so they always cover the whole page.
+    - <b>Available customizations</b>: (Check `PagedCollectionViewFlowLayout.pageSpacing`)
+        - Set spacing between pages that is only visible during scrolling
+        <br><br>
+    <img width="600" height="520" src="Resources/paged-example.gif">
 - `CenteredItemCollectionViewFlowLayout`
     - Scrolls the collectionView during rotation to show the same item that was visible before rotation
     - <b>Available customizations</b> (Check `CenteredItemLocatorDelegate`):
@@ -13,14 +24,6 @@ There are two CollectionViewFlowLayout:
         - Ability to reject scrolling
         <br><br>
     <img width="600" height="520" src="Resources/centered-item-example.gif">
-- `PagedCollectionViewFlowLayout`
-    - Scales the cells during rotation so they always cover the whole page.
-    - <b>Available customizations</b>: (Check `PagedCollectionViewFlowLayout`)
-        - Set page insets for each page
-        - Set spacing between page that is only visible during scrolling
-        - Decide whether the cells are displayed full screen or inside the safe Area region
-        <br><br>
-    <img width="600" height="520" src="Resources/paged-example.gif">
 
 
 # License

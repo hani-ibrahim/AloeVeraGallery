@@ -1,5 +1,5 @@
 //
-//  TestCollectionViewCell.swift
+//  CenteredItemCollectionViewCell.swift
 //  PagedCollectionViewExample
 //
 //  Created by Hani on 05.10.19.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-final class TestCollectionViewCell: UICollectionViewCell {
+final class CenteredItemCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet private(set) var titleLabel: UILabel!
     

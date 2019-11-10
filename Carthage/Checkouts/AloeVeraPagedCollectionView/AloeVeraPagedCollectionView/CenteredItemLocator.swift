@@ -72,7 +72,7 @@ public final class CenteredItemLocator {
         let proposedXPosition = layoutAttributes.center.x - visibleCenter.x
         let proposedYPosition = layoutAttributes.center.y - visibleCenter.y
         let maximumXPosition = contentSize.width - collectionView.bounds.size.width + collectionView.adjustedContentInset.right
-        let maximumYPosition = contentSize.height - collectionView.bounds.size.height + collectionView.adjustedContentInset.top
+        let maximumYPosition = contentSize.height - collectionView.bounds.size.height + collectionView.adjustedContentInset.bottom
         let minimumXPosition = -collectionView.adjustedContentInset.left
         let minimumYPosition = -collectionView.adjustedContentInset.top
         let xPosition = min(max(proposedXPosition, minimumXPosition), maximumXPosition)
