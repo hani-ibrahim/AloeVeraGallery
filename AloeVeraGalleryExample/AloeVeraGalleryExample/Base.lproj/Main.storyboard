@@ -15,21 +15,25 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8dH-th-jWx">
-                                <rect key="frame" x="162.5" y="433" width="89" height="30"/>
-                                <state key="normal" title="Open Gallery"/>
-                                <connections>
-                                    <action selector="openGalleryButtonPressed" destination="BYZ-38-t0r" eventType="touchUpInside" id="Emd-1D-d3y"/>
-                                </connections>
-                            </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UQK-bE-BQF" customClass="PagedCollectionView" customModule="AloeVeraPagedCollectionView">
+                                <rect key="frame" x="0.0" y="94" width="414" height="200"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="200" id="ei2-q2-fE3"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
-                            <constraint firstItem="8dH-th-jWx" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="9EH-A9-qpt"/>
-                            <constraint firstItem="8dH-th-jWx" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="Liw-Wv-Wsh"/>
+                            <constraint firstItem="UQK-bE-BQF" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="50" id="4jf-u7-eQ7"/>
+                            <constraint firstItem="UQK-bE-BQF" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="BTD-L8-gHG"/>
+                            <constraint firstAttribute="trailing" secondItem="UQK-bE-BQF" secondAttribute="trailing" id="x4o-De-6dc"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
+                    <connections>
+                        <outlet property="pagedCollectionView" destination="UQK-bE-BQF" id="zoj-cj-xYf"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>

@@ -14,6 +14,7 @@ Main Componenets
     - Scales the cells during rotation so they always cover the whole page.
     - <b>Available customizations</b>: (Check `PagedCollectionViewFlowLayout.pageSpacing`)
         - Set spacing between pages that is only visible during scrolling
+        - Set the initial indexPath of the collection view
         <br><br>
     <img width="600" height="520" src="Resources/paged-example.gif">
 - `CenteredItemCollectionViewFlowLayout`

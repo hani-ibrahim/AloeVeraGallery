@@ -20,6 +20,9 @@ open class PagedCollectionViewFlowLayout: CenteredItemCollectionViewFlowLayout {
         }
     }
     
+    /// Initial IndexPath to scroll to
+    public var initialIndexPath: IndexPath?
+    
     private var shouldConfigurePage = true
     
     open override func prepare() {
@@ -41,6 +44,11 @@ open class PagedCollectionViewFlowLayout: CenteredItemCollectionViewFlowLayout {
         itemSize = newItemSize
         
         super.prepare()
+        
+        if let initialIndexPath = initialIndexPath {
+            centeredItemLocator.scrollToItem(at: initialIndexPath, toBeCenteredIn: collectionView)
+            self.initialIndexPath = nil
+        }
         
         /// Fixing bug in UICollectionViewFlowLayout where the `itemSize` is not applied except with `invalidateLayout` is called after `prepare`
         if shouldInvalidate {
