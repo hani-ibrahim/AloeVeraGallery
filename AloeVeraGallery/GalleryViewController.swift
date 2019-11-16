@@ -41,22 +41,29 @@ open class GalleryViewController: UIViewController {
 }
 
 extension GalleryViewController: UICollectionViewDelegate {
-    public func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+    open func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         scrollingStopping(at: targetContentOffset.pointee, didEndScrollingAnimation: false)
     }
     
-    public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+    open func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         if !decelerate {
             scrollingStopping(at: scrollView.bounds.origin, didEndScrollingAnimation: true)
         }
     }
     
-    public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+    open func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         scrollingStopping(at: scrollView.bounds.origin, didEndScrollingAnimation: true)
     }
     
-    public func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+    open func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
         scrollingStopping(at: scrollView.bounds.origin, didEndScrollingAnimation: true)
+    }
+}
+
+extension GalleryViewController: GalleryTransitionDestinationViewController {
+    public func animator(_ animator: GalleryTransitionAnimator, configureViewForTransitionPercentage percentage: CGFloat) {
+        pagedCollectionView.backgroundColor = percentage == 1 ? .white : .clear
+        pagedCollectionView.collectionView.backgroundColor = pagedCollectionView.backgroundColor
     }
 }
 

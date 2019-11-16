@@ -14,6 +14,7 @@ final class ExampleViewController: UIViewController {
     
     @IBOutlet private var pagedCollectionView: PagedCollectionView!
     
+    private let transitionDelegate = GalleryTransitionDelegate()
     private lazy var dataSource = CollectionViewDataSource(sections: [section])
     private lazy var section: ImageCollectionViewCell.Section = {
         let viewModels = (0..<10).map { ImageCellViewModel(image: UIImage(named: "test-image-\($0)")!) }
@@ -44,9 +45,14 @@ extension ExampleViewController: UICollectionViewDelegate {
         viewController.pageSpacing = 50
         viewController.startingIndexPath = indexPath
         viewController.delegate = self
+        viewController.transitioningDelegate = transitionDelegate
         viewController.modalPresentationStyle = .fullScreen
         present(viewController, animated: true)
     }
+}
+
+extension ExampleViewController: GalleryTransitionSourceViewController {
+    
 }
 
 extension ExampleViewController: GalleryDelegate {
