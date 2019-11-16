@@ -19,6 +19,7 @@ public class PagedCollectionView: UIView {
     private var bottomConstraint: NSLayoutConstraint!
     private var rightConstraint: NSLayoutConstraint!
     private var leftConstraint: NSLayoutConstraint!
+    private var nextViewLayoutIndexpath: IndexPath?
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -40,13 +41,32 @@ public class PagedCollectionView: UIView {
         } else {
             contentInset = UIEdgeInsets(top: pageSpacing / 2, left: 0, bottom: pageSpacing / 2, right: 0)
         }
-
+        
         collectionViewLayout.collectionViewInset = contentInset
         collectionView.scrollIndicatorInsets = contentInset
         topConstraint.constant = contentInset.top
         bottomConstraint.constant = contentInset.bottom
         rightConstraint.constant = contentInset.right
         leftConstraint.constant = contentInset.left
+    }
+    
+    /// Use this function to scroll the collection view when the collection view is not currently visible
+    public func updateIndexPathForNextViewLayout(with indexPath: IndexPath) {
+        nextViewLayoutIndexpath = indexPath
+        scrollToItem(at: indexPath, animated: false)
+    }
+    
+    /// Scroll the collection view to the given index path
+    public func scrollToItem(at indexPath: IndexPath, animated: Bool) {
+        collectionViewLayout.scrollToItem(at: indexPath, animated: animated)
+    }
+    
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        if let indexPath = nextViewLayoutIndexpath {
+            collectionViewLayout.scrollToItem(at: indexPath, animated: false)
+            nextViewLayoutIndexpath = nil
+        }
     }
 }
 

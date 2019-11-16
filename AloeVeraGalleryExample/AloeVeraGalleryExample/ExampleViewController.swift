@@ -13,7 +13,6 @@ import UIKit
 final class ExampleViewController: UIViewController {
     
     @IBOutlet private var pagedCollectionView: PagedCollectionView!
-    private var currentIndexPath: IndexPath?
     
     private lazy var dataSource = CollectionViewDataSource(sections: [section])
     private lazy var section: ImageCollectionViewCell.Section = {
@@ -24,13 +23,6 @@ final class ExampleViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        if let indexPath = currentIndexPath {
-            pagedCollectionView.collectionViewLayout.scrollToItem(at: indexPath)
-        }
     }
 }
 
@@ -50,7 +42,7 @@ extension ExampleViewController: UICollectionViewDelegate {
         let viewController = GalleryViewController.makeViewController()
         viewController.sections = [section]
         viewController.pageSpacing = 50
-        viewController.startIndexPath = indexPath
+        viewController.startingIndexPath = indexPath
         viewController.delegate = self
         viewController.modalPresentationStyle = .fullScreen
         present(viewController, animated: true)
@@ -59,7 +51,6 @@ extension ExampleViewController: UICollectionViewDelegate {
 
 extension ExampleViewController: GalleryDelegate {
     func gallery(galleryViewController: GalleryViewController, didScrollToItemAt indexPath: IndexPath) {
-        pagedCollectionView.collectionViewLayout.scrollToItem(at: indexPath)
-        currentIndexPath = indexPath
+        pagedCollectionView.updateIndexPathForNextViewLayout(with: indexPath)
     }
 }

@@ -72,9 +72,9 @@ extension CenteredItemLocating {
         return CGPoint(x: xPosition, y: yPosition)
     }
     
-    public func scrollToItem(in scrollView: UIScrollView, to contentOffset: CGPoint) {
+    public func scrollToItem(in scrollView: UIScrollView, to contentOffset: CGPoint, animated: Bool) {
         if centeredItemLocatingDelegate?.centeredItemLocator(self, shouldScrollTo: contentOffset) != false {
-            scrollView.contentOffset = contentOffset
+            scrollView.setContentOffset(contentOffset, animated: animated)
         }
     }
 }

@@ -29,7 +29,7 @@ open class CenteredItemCollectionViewFlowLayout: UICollectionViewFlowLayout, Cen
             within: collectionView.adjustedContentInset,
             contentSize: collectionViewContentSize
         )
-        scrollToItem(in: collectionView, to: offset)
+        scrollToItem(in: collectionView, to: offset, animated: false)
     }
     
     /// ⚠️ Must be called before the rotation start

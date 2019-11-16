@@ -31,6 +31,7 @@ open class PagedCollectionViewLayout: UICollectionViewLayout, CenteredItemLocati
     
     private var properties: Properties = .empty
     private var cache: Cache = .empty
+    private var lastBounds: CGRect?
     
     open override func prepare() {
         super.prepare()
@@ -40,12 +41,9 @@ open class PagedCollectionViewLayout: UICollectionViewLayout, CenteredItemLocati
         
         properties = properties(for: collectionView, bounds: collectionView.bounds)
         cache = cache(for: collectionView, collectionViewSize: collectionView.bounds.size, with: properties)
-    }
-    
-    open override func prepare(forAnimatedBoundsChange oldBounds: CGRect) {
-        super.prepare(forAnimatedBoundsChange: oldBounds)
-        if let centeredItemIndexPath = centeredItemIndexPath(in: oldBounds) {
-            scrollToItem(at: centeredItemIndexPath)
+        
+        if let lastBounds = lastBounds, let lastCenteredItemIndexPath = centeredItemIndexPath(in: lastBounds) {
+            scrollToItem(at: lastCenteredItemIndexPath, animated: false)
         }
     }
     
@@ -62,7 +60,8 @@ open class PagedCollectionViewLayout: UICollectionViewLayout, CenteredItemLocati
     }
     
     open override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
-        newBounds.size != cache.collectionViewSize
+        lastBounds = collectionView?.bounds
+        return newBounds.size != cache.collectionViewSize
     }
     
     open override func initialLayoutAttributesForAppearingItem(at itemIndexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
@@ -86,8 +85,8 @@ open class PagedCollectionViewLayout: UICollectionViewLayout, CenteredItemLocati
         return locateCenteredItem(near: contentCenter, from: items)
     }
     
-    /// Scroll the collection view to the given index
-    open func scrollToItem(at indexPath: IndexPath) {
+    /// Scroll the collection view to the given index path
+    open func scrollToItem(at indexPath: IndexPath, animated: Bool) {
         guard let collectionView = collectionView else {
             return
         }
@@ -108,7 +107,7 @@ open class PagedCollectionViewLayout: UICollectionViewLayout, CenteredItemLocati
             within: .zero,
             contentSize: cache.contentSize
         )
-        scrollToItem(in: collectionView, to: offset)
+        scrollToItem(in: collectionView, to: offset, animated: animated)
     }
 }
 

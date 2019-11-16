@@ -25,7 +25,7 @@ open class GalleryViewController: UIViewController {
     
     public weak var delegate: GalleryDelegate?
     public var pageSpacing: CGFloat = 0
-    public var startIndexPath: IndexPath?
+    public var startingIndexPath: IndexPath?
     public var sections: [SectionConfiguring] = []
     
     private lazy var dataSource = CollectionViewDataSource(sections: sections)
@@ -33,13 +33,6 @@ open class GalleryViewController: UIViewController {
     open override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
-    }
-    
-    open override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        if let startIndexPath = startIndexPath {
-            pagedCollectionView.collectionViewLayout.scrollToItem(at: startIndexPath)
-        }
     }
     
     @IBAction private func closeButtonPressed() {
@@ -67,6 +60,7 @@ private extension GalleryViewController {
     func setupView() {
         setupPageControl()
         setupCollectionView()
+        setupStartingIndexPath()
     }
     
     func scrollingStopped() {
@@ -79,11 +73,7 @@ private extension GalleryViewController {
     
     func setupPageControl() {
         pageControl.numberOfPages = dataSource.totalNumberOfItems
-        if let startIndexPath = startIndexPath {
-            pageControl.currentPage = dataSource.absoluteIndex(forItemAt: startIndexPath)
-        } else {
-            pageControl.currentPage = 0
-        }
+        pageControl.currentPage = 0
     }
     
     func setupCollectionView() {
@@ -94,5 +84,13 @@ private extension GalleryViewController {
         pagedCollectionView.collectionView.delegate = self
         dataSource.registerCells(in: pagedCollectionView.collectionView)
         pagedCollectionView.configure()
+    }
+    
+    func setupStartingIndexPath() {
+        guard let indexPath = startingIndexPath else {
+            return
+        }
+        pagedCollectionView.updateIndexPathForNextViewLayout(with: indexPath)
+        pageControl.currentPage = dataSource.absoluteIndex(forItemAt: indexPath)
     }
 }
