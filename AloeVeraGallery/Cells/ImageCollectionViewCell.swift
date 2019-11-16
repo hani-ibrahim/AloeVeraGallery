@@ -23,7 +23,7 @@ open class ImageCollectionViewCell: UICollectionViewCell {
 }
 
 extension ImageCollectionViewCell: CellConfigurable {
-    public func configure(with viewModel: ImageCellViewModel) {
+    open func configure(with viewModel: ImageCellViewModel) {
         imageView.image = viewModel.image
     }
 }

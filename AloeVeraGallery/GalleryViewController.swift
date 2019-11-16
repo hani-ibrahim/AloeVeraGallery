@@ -41,18 +41,22 @@ open class GalleryViewController: UIViewController {
 }
 
 extension GalleryViewController: UICollectionViewDelegate {
+    public func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        scrollingStopping(at: targetContentOffset.pointee, didEndScrollingAnimation: false)
+    }
+    
     public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         if !decelerate {
-            scrollingStopped()
+            scrollingStopping(at: scrollView.bounds.origin, didEndScrollingAnimation: true)
         }
     }
     
     public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        scrollingStopped()
+        scrollingStopping(at: scrollView.bounds.origin, didEndScrollingAnimation: true)
     }
     
     public func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
-        scrollingStopped()
+        scrollingStopping(at: scrollView.bounds.origin, didEndScrollingAnimation: true)
     }
 }
 
@@ -63,12 +67,15 @@ private extension GalleryViewController {
         setupStartingIndexPath()
     }
     
-    func scrollingStopped() {
-        guard let currentIndexPath = pagedCollectionView.collectionViewLayout.centeredItemIndexPath(in: pagedCollectionView.collectionView.bounds) else {
+    func scrollingStopping(at contentOffset: CGPoint, didEndScrollingAnimation: Bool) {
+        let bounds = CGRect(origin: contentOffset, size: pagedCollectionView.bounds.size)
+        guard let currentIndexPath = pagedCollectionView.collectionViewLayout.centeredItemIndexPath(in: bounds) else {
             return
         }
-        delegate?.gallery(galleryViewController: self, didScrollToItemAt: currentIndexPath)
         pageControl.currentPage = dataSource.absoluteIndex(forItemAt: currentIndexPath)
+        if didEndScrollingAnimation {
+            delegate?.gallery(galleryViewController: self, didScrollToItemAt: currentIndexPath)
+        }
     }
     
     func setupPageControl() {

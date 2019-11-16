@@ -14,7 +14,7 @@ public protocol CellIdentifiable {
 
 extension CellIdentifiable {
     public static var identifier: String {
-        return String(describing: self)
+        String(describing: self)
     }
 }
 
