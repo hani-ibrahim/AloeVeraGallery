@@ -30,22 +30,22 @@ open class GalleryViewController: UIViewController {
     public var sections: [SectionConfiguring] = []
     
     private lazy var dataSource = CollectionViewDataSource(sections: sections)
+    private let controlsAnimationDuration: TimeInterval = 0.2
     
     open override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
-    }
-    
-    open override func viewWillAppear(_ animated: Bool) {
-        print("GalleryViewController - viewWillAppear")
+        hideControls(animated: false)
     }
     
     open override func viewDidAppear(_ animated: Bool) {
-        print("GalleryViewController - viewDidAppear")
+        super.viewDidAppear(animated)
+        showControls()
     }
     
     open override func viewWillDisappear(_ animated: Bool) {
-        print("GalleryViewController - viewWillDisappear")
+        super.viewWillDisappear(animated)
+        hideControls(animated: true)
     }
     
     @IBAction private func closeButtonPressed() {
@@ -74,7 +74,13 @@ extension GalleryViewController: UICollectionViewDelegate {
 }
 
 extension GalleryViewController: GalleryTransitionDestinationViewController {
+    public var animatableView: UIView {
+        pagedCollectionView
+    }
     
+    public func animatableViewCenter(relativeTo view: UIView) -> CGPoint {
+        view.convert(pagedCollectionView.center, to: view)
+    }
 }
 
 private extension GalleryViewController {
@@ -112,10 +118,25 @@ private extension GalleryViewController {
         guard let currentIndexPath = pagedCollectionView.collectionViewLayout.centeredItemIndexPath(in: bounds) else {
             return
         }
-        print("currentIndexPath: \(currentIndexPath.item)")
         pageControl.currentPage = dataSource.absoluteIndex(forItemAt: currentIndexPath)
         if didEndScrollingAnimation {
             delegate?.gallery(galleryViewController: self, didScrollToItemAt: currentIndexPath)
         }
+    }
+    
+    func hideControls(animated: Bool) {
+        UIViewPropertyAnimator.runningPropertyAnimator(withDuration: animated ? controlsAnimationDuration : 0, delay: 0, animations: {
+            self.closeButton.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
+            self.closeButton.alpha = 0
+            self.pageControl.alpha = 0
+        }, completion: nil)
+    }
+    
+    func showControls() {
+        UIViewPropertyAnimator(duration: controlsAnimationDuration, dampingRatio: 0.5) {
+            self.closeButton.transform = .identity
+            self.closeButton.alpha = 1
+            self.pageControl.alpha = 1
+        }.startAnimation()
     }
 }

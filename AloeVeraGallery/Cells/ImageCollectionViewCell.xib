@@ -19,8 +19,10 @@
                 <subviews>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="bvb-kc-udP">
                         <rect key="frame" x="0.0" y="0.0" width="284" height="280"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </imageView>
                 </subviews>
+                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 <constraints>
                     <constraint firstItem="bvb-kc-udP" firstAttribute="leading" secondItem="XSI-M3-9Rw" secondAttribute="leading" id="83n-Fx-4yK"/>
                     <constraint firstItem="bvb-kc-udP" firstAttribute="top" secondItem="XSI-M3-9Rw" secondAttribute="top" id="8IB-Nb-G3F"/>
@@ -28,6 +30,7 @@
                     <constraint firstAttribute="trailing" secondItem="bvb-kc-udP" secondAttribute="trailing" id="veO-J6-JB1"/>
                 </constraints>
             </collectionViewCellContentView>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <size key="customSize" width="284" height="280"/>
             <connections>
                 <outlet property="imageView" destination="bvb-kc-udP" id="b4h-in-k8t"/>

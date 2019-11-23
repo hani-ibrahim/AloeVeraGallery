@@ -23,7 +23,7 @@
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7NU-7I-dSq" customClass="PagedCollectionView" customModule="AloeVeraPagedCollectionView">
                     <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vJH-fA-3NO">
                     <rect key="frame" x="353" y="64" width="41" height="32"/>
@@ -41,6 +41,7 @@
                     <color key="currentPageIndicatorTintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </pageControl>
             </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstItem="7NU-7I-dSq" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="8Io-qs-w6a"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="vJH-fA-3NO" secondAttribute="trailing" constant="20" id="DZ8-K9-VEL"/>

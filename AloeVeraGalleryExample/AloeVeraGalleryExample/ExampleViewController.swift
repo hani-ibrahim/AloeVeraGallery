@@ -52,7 +52,13 @@ extension ExampleViewController: UICollectionViewDelegate {
 }
 
 extension ExampleViewController: GalleryTransitionSourceViewController {
+    var sourceView: UIView {
+        pagedCollectionView
+    }
     
+    func sourceViewCenter(relativeTo view: UIView) -> CGPoint {
+        view.convert(pagedCollectionView.center, to: view)
+    }
 }
 
 extension ExampleViewController: GalleryDelegate {
