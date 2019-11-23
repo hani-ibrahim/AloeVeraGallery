@@ -11,6 +11,7 @@ import UIKit
 
 public protocol GalleryDelegate: AnyObject {
     func gallery(galleryViewController: GalleryViewController, didScrollToItemAt indexPath: IndexPath)
+    func didCloseGalleryView()
 }
 
 open class GalleryViewController: UIViewController {
@@ -70,17 +71,6 @@ extension GalleryViewController: UICollectionViewDelegate {
     open func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
         scrollingStopping(at: scrollView.bounds.origin, didEndScrollingAnimation: true)
     }
-    
-    private func scrollingStopping(at contentOffset: CGPoint, didEndScrollingAnimation: Bool) {
-        let bounds = CGRect(origin: contentOffset, size: pagedCollectionView.bounds.size)
-        guard let currentIndexPath = pagedCollectionView.collectionViewLayout.centeredItemIndexPath(in: bounds) else {
-            return
-        }
-        pageControl.currentPage = dataSource.absoluteIndex(forItemAt: currentIndexPath)
-        if didEndScrollingAnimation {
-            delegate?.gallery(galleryViewController: self, didScrollToItemAt: currentIndexPath)
-        }
-    }
 }
 
 extension GalleryViewController: GalleryTransitionDestinationViewController {
@@ -92,7 +82,6 @@ private extension GalleryViewController {
         setupPageControl()
         setupCollectionView()
         setupStartingIndexPath()
-        setupPanGesture()
     }
     
     func setupPageControl() {
@@ -118,20 +107,15 @@ private extension GalleryViewController {
         pageControl.currentPage = dataSource.absoluteIndex(forItemAt: indexPath)
     }
     
-    func setupPanGesture() {
-        let recognizer = UIPanGestureRecognizer(target: self, action: #selector(panGestureRecognized))
-        view.addGestureRecognizer(recognizer)
-    }
-    
-    @objc
-    func panGestureRecognized(recognizer: UIPanGestureRecognizer) {
-        let animator = (transitioningDelegate as? GalleryTransitionDelegate)?.transitionAnimator
-        switch recognizer.state {
-        case .began:
-            animator?.isInteractive = true
-            dismiss(animated: true)
-        default:
-            animator?.handlePanGesture(by: recognizer)
+    func scrollingStopping(at contentOffset: CGPoint, didEndScrollingAnimation: Bool) {
+        let bounds = CGRect(origin: contentOffset, size: pagedCollectionView.bounds.size)
+        guard let currentIndexPath = pagedCollectionView.collectionViewLayout.centeredItemIndexPath(in: bounds) else {
+            return
+        }
+        print("currentIndexPath: \(currentIndexPath.item)")
+        pageControl.currentPage = dataSource.absoluteIndex(forItemAt: currentIndexPath)
+        if didEndScrollingAnimation {
+            delegate?.gallery(galleryViewController: self, didScrollToItemAt: currentIndexPath)
         }
     }
 }

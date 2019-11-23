@@ -10,11 +10,16 @@ import UIKit
 
 public final class GalleryTransitionDelegate: NSObject {
     
-    let transitionAnimator = GalleryTransitionAnimator()
+    private let transitionAnimator: GalleryTransitionAnimator
+    
+    public init(duration: TimeInterval = 0.35) {
+        transitionAnimator = GalleryTransitionAnimator(duration: duration)
+    }
 }
 
 extension GalleryTransitionDelegate: UIViewControllerTransitioningDelegate {
     public func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        transitionAnimator.configure(viewController: presented)
         transitionAnimator.isDismissed = false
         return transitionAnimator
     }

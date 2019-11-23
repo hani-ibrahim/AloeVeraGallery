@@ -59,4 +59,8 @@ extension ExampleViewController: GalleryDelegate {
     func gallery(galleryViewController: GalleryViewController, didScrollToItemAt indexPath: IndexPath) {
         pagedCollectionView.updateIndexPathForNextViewLayout(with: indexPath)
     }
+    
+    func didCloseGalleryView() {
+        
+    }
 }
