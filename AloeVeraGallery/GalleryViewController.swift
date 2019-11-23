@@ -35,6 +35,18 @@ open class GalleryViewController: UIViewController {
         setupView()
     }
     
+    open override func viewWillAppear(_ animated: Bool) {
+        print("GalleryViewController - viewWillAppear")
+    }
+    
+    open override func viewDidAppear(_ animated: Bool) {
+        print("GalleryViewController - viewDidAppear")
+    }
+    
+    open override func viewWillDisappear(_ animated: Bool) {
+        print("GalleryViewController - viewWillDisappear")
+    }
+    
     @IBAction private func closeButtonPressed() {
         dismiss(animated: true)
     }
@@ -58,23 +70,8 @@ extension GalleryViewController: UICollectionViewDelegate {
     open func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
         scrollingStopping(at: scrollView.bounds.origin, didEndScrollingAnimation: true)
     }
-}
-
-extension GalleryViewController: GalleryTransitionDestinationViewController {
-    public func animator(_ animator: GalleryTransitionAnimator, configureViewForTransitionPercentage percentage: CGFloat) {
-        pagedCollectionView.backgroundColor = percentage == 1 ? .white : .clear
-        pagedCollectionView.collectionView.backgroundColor = pagedCollectionView.backgroundColor
-    }
-}
-
-private extension GalleryViewController {
-    func setupView() {
-        setupPageControl()
-        setupCollectionView()
-        setupStartingIndexPath()
-    }
     
-    func scrollingStopping(at contentOffset: CGPoint, didEndScrollingAnimation: Bool) {
+    private func scrollingStopping(at contentOffset: CGPoint, didEndScrollingAnimation: Bool) {
         let bounds = CGRect(origin: contentOffset, size: pagedCollectionView.bounds.size)
         guard let currentIndexPath = pagedCollectionView.collectionViewLayout.centeredItemIndexPath(in: bounds) else {
             return
@@ -83,6 +80,19 @@ private extension GalleryViewController {
         if didEndScrollingAnimation {
             delegate?.gallery(galleryViewController: self, didScrollToItemAt: currentIndexPath)
         }
+    }
+}
+
+extension GalleryViewController: GalleryTransitionDestinationViewController {
+    
+}
+
+private extension GalleryViewController {
+    func setupView() {
+        setupPageControl()
+        setupCollectionView()
+        setupStartingIndexPath()
+        setupPanGesture()
     }
     
     func setupPageControl() {
@@ -106,5 +116,22 @@ private extension GalleryViewController {
         }
         pagedCollectionView.updateIndexPathForNextViewLayout(with: indexPath)
         pageControl.currentPage = dataSource.absoluteIndex(forItemAt: indexPath)
+    }
+    
+    func setupPanGesture() {
+        let recognizer = UIPanGestureRecognizer(target: self, action: #selector(panGestureRecognized))
+        view.addGestureRecognizer(recognizer)
+    }
+    
+    @objc
+    func panGestureRecognized(recognizer: UIPanGestureRecognizer) {
+        let animator = (transitioningDelegate as? GalleryTransitionDelegate)?.transitionAnimator
+        switch recognizer.state {
+        case .began:
+            animator?.isInteractive = true
+            dismiss(animated: true)
+        default:
+            animator?.handlePanGesture(by: recognizer)
+        }
     }
 }

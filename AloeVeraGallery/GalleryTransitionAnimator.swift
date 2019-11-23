@@ -9,73 +9,120 @@
 import UIKit
 
 public protocol GalleryTransitionSourceViewController {
-//    var sourceView: UIView { get }
-//    func sourceViewFrame(relativeTo containerView: UIView) -> CGRect
+//    func willStartPresentingGallary(by animator: GalleryTransitionAnimator)
+//    func didFinishPresentingGallary(by animator: GalleryTransitionAnimator)
+//    func willStartDismissingGallary(by animator: GalleryTransitionAnimator)
+//    func didFinishDismissingGallary(by animator: GalleryTransitionAnimator)
 }
 
 public protocol GalleryTransitionDestinationViewController {
-    func animator(_ animator: GalleryTransitionAnimator, configureViewForTransitionPercentage percentage: CGFloat)
+//    func willStartPresentingGallary(by animator: GalleryTransitionAnimator)
+//    func didFinishPresentingGallary(by animator: GalleryTransitionAnimator)
+//    func willStartDismissingGallary(by animator: GalleryTransitionAnimator)
+//    func didFinishDismissingGallary(by animator: GalleryTransitionAnimator)
 }
 
-public final class GalleryTransitionAnimator: NSObject {
+public final class GalleryTransitionAnimator: UIPercentDrivenInteractiveTransition {
     
-    public var duration: TimeInterval = 0.35
-    public var isDimissed = false
+    public var transitionDuration: TimeInterval = 0.35
+    public var isDismissed = false
+    public var isInteractive = false
+    
+    private var context: UIViewControllerContextTransitioning?
+    private var animator: UIViewPropertyAnimator?
 }
 
 extension GalleryTransitionAnimator: UIViewControllerAnimatedTransitioning {
+    public override func startInteractiveTransition(_ transitionContext: UIViewControllerContextTransitioning) {
+        super.startInteractiveTransition(transitionContext)
+        configurePropertyAnimatorIfNeeded(with: transitionContext)
+    }
+    
+    public override func update(_ percentComplete: CGFloat) {
+        super.update(percentComplete)
+        animator?.fractionComplete = percentComplete
+    }
+    
+    public override func cancel() {
+        super.cancel()
+        animator?.stopAnimation(false)
+        animator?.finishAnimation(at: .start)
+    }
+    
+    public override func finish() {
+        super.finish()
+        animator?.stopAnimation(false)
+        animator?.finishAnimation(at: .end)
+    }
+    
     public func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        duration
+        transitionDuration
     }
     
     public func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-        guard let transitionData = TransitionData(transitionContext: transitionContext, isDimissed: isDimissed) else {
-            transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+        configurePropertyAnimatorIfNeeded(with: transitionContext)
+        if !isInteractive {
+            animator?.startAnimation()
+        }
+    }
+}
+
+extension GalleryTransitionAnimator {
+    func handlePanGesture(by recognizer: UIPanGestureRecognizer) {
+        guard let recognizerView = recognizer.view?.superview else {
             return
         }
-        transitionData.destinationViewController.animator(self, configureViewForTransitionPercentage: isDimissed ? 1 : 0)
-        transitionData.containerView.addSubview(transitionData.sourveView)
-        transitionData.containerView.addSubview(transitionData.destinationView)
+        let translation = recognizer.translation(in: recognizerView)
+        var progress = abs(translation.y / 200.0)
+        progress = min(max(progress, 0.01), 0.99)
         
-        transitionData.sourveView.frame = transitionData.containerView.bounds
-        transitionData.destinationView.frame = transitionData.containerView.bounds
-        
-        let transformBefore: CGAffineTransform = isDimissed ? .identity : CGAffineTransform(scaleX: 0.001, y: 0.001)
-        let transformAfter: CGAffineTransform = isDimissed ? CGAffineTransform(scaleX: 0.001, y: 0.001) : .identity
-        
-        transitionData.destinationView.transform = transformBefore
-        
-        
-        UIViewPropertyAnimator.runningPropertyAnimator(withDuration: duration, delay: 0, animations: {
-            transitionData.destinationView.transform = transformAfter
-        }, completion: { _ in
-            transitionData.destinationViewController.animator(self, configureViewForTransitionPercentage: self.isDimissed ? 0 : 1)
-            transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
-        })
+        switch recognizer.state {
+        case .changed:
+            update(progress)
+        case .ended, .cancelled, .failed:
+            if progress < 0.5 {
+                cancel()
+                context?.completeTransition(false)
+            } else {
+                finish()
+                context?.completeTransition(true)
+            }
+        default:
+            break
+        }
     }
 }
 
 private extension GalleryTransitionAnimator {
-    struct TransitionData {
-        let sourceViewController: UIViewController & GalleryTransitionSourceViewController
-        let destinationViewController: UIViewController & GalleryTransitionDestinationViewController
-        let sourveView: UIView
-        let destinationView: UIView
-        let containerView: UIView
+    func configurePropertyAnimatorIfNeeded(with transitionContext: UIViewControllerContextTransitioning) {
+        guard transitionContext !== context else {
+            return
+        }
         
-        init?(transitionContext: UIViewControllerContextTransitioning, isDimissed: Bool) {
-            guard
-                let sourceViewController = transitionContext.viewController(forKey: isDimissed ? .to : .from ) as? UIViewController & GalleryTransitionSourceViewController,
-                let destinationViewController = transitionContext.viewController(forKey: isDimissed ? .from : .to ) as? UIViewController & GalleryTransitionDestinationViewController,
-                let sourveView = transitionContext.view(forKey: isDimissed ? .to : .from ),
-                let destinationView = transitionContext.view(forKey: isDimissed ? .from : .to ) else {
-                    return nil
-            }
-            self.sourceViewController = sourceViewController
-            self.destinationViewController = destinationViewController
-            self.sourveView = sourveView
-            self.destinationView = destinationView
-            self.containerView = transitionContext.containerView
+        guard
+            let sourceViewController = transitionContext.viewController(forKey: isDismissed ? .to : .from ) as? UIViewController & GalleryTransitionSourceViewController,
+            let destinationViewController = transitionContext.viewController(forKey: isDismissed ? .from : .to ) as? UIViewController & GalleryTransitionDestinationViewController else {
+                transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+                context = nil
+                return
+        }
+        
+        context = transitionContext
+        transitionContext.containerView.addSubview(sourceViewController.view)
+        transitionContext.containerView.addSubview(destinationViewController.view)
+        sourceViewController.view.frame = isDismissed ? transitionContext.finalFrame(for: sourceViewController) : transitionContext.initialFrame(for: sourceViewController)
+        destinationViewController.view.frame = isDismissed ? transitionContext.initialFrame(for: destinationViewController) : transitionContext.finalFrame(for: destinationViewController)
+        
+        let transformBefore: CGAffineTransform = isDismissed ? .identity : CGAffineTransform(scaleX: 0.001, y: 0.001)
+        let transformAfter: CGAffineTransform = isDismissed ? CGAffineTransform(scaleX: 0.001, y: 0.001) : .identity
+        
+        destinationViewController.view.transform = transformBefore
+        animator = UIViewPropertyAnimator(duration: transitionDuration, dampingRatio: 0.8)
+        animator?.addAnimations {
+            destinationViewController.view.transform = transformAfter
+        }
+        animator?.addCompletion { _ in
+            transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
         }
     }
 }

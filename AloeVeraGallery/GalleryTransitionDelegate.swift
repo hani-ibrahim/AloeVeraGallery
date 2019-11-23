@@ -10,17 +10,21 @@ import UIKit
 
 public final class GalleryTransitionDelegate: NSObject {
     
-    private let animator = GalleryTransitionAnimator()
+    let transitionAnimator = GalleryTransitionAnimator()
 }
 
 extension GalleryTransitionDelegate: UIViewControllerTransitioningDelegate {
     public func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        animator.isDimissed = false
-        return animator
+        transitionAnimator.isDismissed = false
+        return transitionAnimator
     }
     
     public func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        animator.isDimissed = true
-        return animator
+        transitionAnimator.isDismissed = true
+        return transitionAnimator
+    }
+    
+    public func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+        transitionAnimator.isInteractive ? transitionAnimator : nil
     }
 }
