@@ -24,6 +24,12 @@ open class GalleryViewController: UIViewController {
     @IBOutlet public private(set) var closeButton: UIButton!
     @IBOutlet public private(set) var pageControl: UIPageControl!
     
+    @IBOutlet public private(set) var animatableView: UIView!
+    @IBOutlet public private(set) var topAnimatableViewConstraint: NSLayoutConstraint!
+    @IBOutlet public private(set) var bottomAnimatableViewConstraint: NSLayoutConstraint!
+    @IBOutlet public private(set) var rightAnimatableViewConstraint: NSLayoutConstraint!
+    @IBOutlet public private(set) var leftAnimatableViewConstraint: NSLayoutConstraint!
+    
     public weak var delegate: GalleryDelegate?
     public var pageSpacing: CGFloat = 0
     public var startingIndexPath: IndexPath?
@@ -74,12 +80,8 @@ extension GalleryViewController: UICollectionViewDelegate {
 }
 
 extension GalleryViewController: GalleryTransitionDestinationViewController {
-    public var animatableView: UIView {
-        pagedCollectionView
-    }
-    
-    public func animatableViewCenter(relativeTo view: UIView) -> CGPoint {
-        view.convert(pagedCollectionView.center, to: view)
+    public func animatableViewFrame(relativeTo view: UIView) -> CGRect {
+        view.convert(pagedCollectionView.frame, to: view)
     }
 }
 

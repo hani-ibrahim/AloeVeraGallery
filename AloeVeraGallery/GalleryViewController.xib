@@ -10,9 +10,14 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="GalleryViewController" customModule="AloeVeraGallery" customModuleProvider="target">
             <connections>
+                <outlet property="animatableView" destination="Z6X-mG-Tbp" id="8BM-IA-4zv"/>
+                <outlet property="bottomAnimatableViewConstraint" destination="Up4-fa-iBj" id="gHy-c7-Ym9"/>
                 <outlet property="closeButton" destination="vJH-fA-3NO" id="ys4-42-NPo"/>
+                <outlet property="leftAnimatableViewConstraint" destination="aZ2-ew-e5q" id="t4E-z9-xwX"/>
                 <outlet property="pageControl" destination="G4A-e3-iEn" id="9ij-NX-bY8"/>
                 <outlet property="pagedCollectionView" destination="7NU-7I-dSq" id="r6k-3c-73q"/>
+                <outlet property="rightAnimatableViewConstraint" destination="CuK-gX-s0d" id="mSi-Mb-cKB"/>
+                <outlet property="topAnimatableViewConstraint" destination="wNT-7I-tEG" id="LU2-nC-7lA"/>
                 <outlet property="view" destination="iN0-l3-epB" id="pe6-ld-9Vl"/>
             </connections>
         </placeholder>
@@ -21,9 +26,19 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7NU-7I-dSq" customClass="PagedCollectionView" customModule="AloeVeraPagedCollectionView">
+                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Z6X-mG-Tbp">
                     <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7NU-7I-dSq" customClass="PagedCollectionView" customModule="AloeVeraPagedCollectionView">
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </view>
+                    </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="7NU-7I-dSq" firstAttribute="centerX" secondItem="Z6X-mG-Tbp" secondAttribute="centerX" id="Iof-oX-yhf"/>
+                        <constraint firstItem="7NU-7I-dSq" firstAttribute="centerY" secondItem="Z6X-mG-Tbp" secondAttribute="centerY" id="c1m-Hh-MCP"/>
+                    </constraints>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vJH-fA-3NO">
                     <rect key="frame" x="353" y="64" width="41" height="32"/>
@@ -43,15 +58,17 @@
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
-                <constraint firstItem="7NU-7I-dSq" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="8Io-qs-w6a"/>
+                <constraint firstAttribute="trailing" secondItem="Z6X-mG-Tbp" secondAttribute="trailing" id="CuK-gX-s0d"/>
+                <constraint firstItem="7NU-7I-dSq" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" id="DF4-BJ-dpX"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="vJH-fA-3NO" secondAttribute="trailing" constant="20" id="DZ8-K9-VEL"/>
                 <constraint firstItem="G4A-e3-iEn" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="Jnh-s6-MEP"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="G4A-e3-iEn" secondAttribute="trailing" constant="20" id="T9U-qR-3fQ"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="G4A-e3-iEn" secondAttribute="bottom" constant="10" id="Tu1-bT-DZX"/>
-                <constraint firstAttribute="trailing" secondItem="7NU-7I-dSq" secondAttribute="trailing" id="hrF-yA-fCR"/>
+                <constraint firstAttribute="bottom" secondItem="Z6X-mG-Tbp" secondAttribute="bottom" id="Up4-fa-iBj"/>
+                <constraint firstItem="Z6X-mG-Tbp" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="aZ2-ew-e5q"/>
+                <constraint firstItem="7NU-7I-dSq" firstAttribute="height" secondItem="iN0-l3-epB" secondAttribute="height" id="ofC-77-fVY"/>
                 <constraint firstItem="vJH-fA-3NO" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="20" id="sa2-PN-RQd"/>
-                <constraint firstItem="7NU-7I-dSq" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="wbC-Qu-JXM"/>
-                <constraint firstAttribute="bottom" secondItem="7NU-7I-dSq" secondAttribute="bottom" id="y16-pd-l6c"/>
+                <constraint firstItem="Z6X-mG-Tbp" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="wNT-7I-tEG"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <point key="canvasLocation" x="139" y="145"/>

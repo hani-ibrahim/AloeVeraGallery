@@ -8,14 +8,25 @@
 
 import UIKit
 
+public enum GalleryCropMode {
+    case verticalCrop
+    case horizontalCrop
+    case none
+}
+
 public protocol GalleryTransitionSourceViewController {
     var sourceView: UIView { get }
-    func sourceViewCenter(relativeTo view: UIView) -> CGPoint
+    var sourceCropMode: GalleryCropMode { get }
+    func sourceViewFrame(relativeTo view: UIView) -> CGRect
 }
 
 public protocol GalleryTransitionDestinationViewController {
-    var animatableView: UIView { get }
-    func animatableViewCenter(relativeTo view: UIView) -> CGPoint
+    var animatableView: UIView! { get }
+    var topAnimatableViewConstraint: NSLayoutConstraint! { get }
+    var bottomAnimatableViewConstraint: NSLayoutConstraint! { get }
+    var rightAnimatableViewConstraint: NSLayoutConstraint! { get }
+    var leftAnimatableViewConstraint: NSLayoutConstraint! { get }
+    func animatableViewFrame(relativeTo view: UIView) -> CGRect
 }
 
 public final class GalleryTransitionAnimator: UIPercentDrivenInteractiveTransition {
@@ -55,12 +66,15 @@ extension GalleryTransitionAnimator: UIViewControllerAnimatedTransitioning {
         }
         currentContext = transitionContext
         setupContainerView()
-        guard sourceViewController != nil, destinationViewController != nil else {
+        guard let sourceViewController = sourceViewController, let destinationViewController = destinationViewController else {
             completeTransition(with: transitionContext)
             return currentAnimator
         }
-        currentAnimator = UIViewPropertyAnimator(duration: transitionDuration, curve: .linear)
-        animateView()
+        let sourceFrame = sourceViewController.sourceViewFrame(relativeTo: transitionContext.containerView)
+        let destinationFrame = destinationViewController.animatableViewFrame(relativeTo: transitionContext.containerView)
+        currentAnimator = UIViewPropertyAnimator(duration: transitionDuration, dampingRatio: 0.8)
+        animateViewConstraint(sourceFrame: sourceFrame, destinationFrame: destinationFrame)
+        animateViewTransform(sourceFrame: sourceFrame, destinationFrame: destinationFrame)
         animateBackground()
         currentAnimator.addCompletion { _ in
             self.completeTransition(with: transitionContext)
@@ -84,35 +98,83 @@ private extension GalleryTransitionAnimator {
         destinationViewController.view.frame = isDismissed ? context.initialFrame(for: destinationViewController) : context.finalFrame(for: destinationViewController)
     }
     
-    func animateView() {
-        guard
-            let context = currentContext,
-            let sourceViewController = sourceViewController,
-            let destinationViewController = destinationViewController else {
-                return
+    func animateViewConstraint(sourceFrame: CGRect, destinationFrame: CGRect) {
+        guard let sourceViewController = sourceViewController, let destinationViewController = destinationViewController else {
+            return
         }
-        let sourceCenter = sourceViewController.sourceViewCenter(relativeTo: context.containerView)
-        let destinationCenter = destinationViewController.animatableViewCenter(relativeTo: context.containerView)
-        let startTransform = CGAffineTransform(translationX: sourceCenter.x - destinationCenter.x, y: sourceCenter.y - destinationCenter.y)
-        let endTransform: CGAffineTransform = .identity
         
-        destinationViewController.animatableView.transform = isDismissed ? endTransform : startTransform
+        let startVerticalConstraint = (destinationFrame.size.height - sourceFrame.size.height) / 2
+        let startHorizontalConstraint = (destinationFrame.size.width - sourceFrame.size.width) / 2
+        
+        let endVerticalConstraint: CGFloat = 0
+        let endHorizontalConstraint: CGFloat = 0
+        
+        switch sourceViewController.sourceCropMode {
+        case .verticalCrop:
+            destinationViewController.topAnimatableViewConstraint.constant = isDismissed ? endVerticalConstraint : startVerticalConstraint
+            destinationViewController.bottomAnimatableViewConstraint.constant = isDismissed ? endVerticalConstraint : startVerticalConstraint
+        case .horizontalCrop:
+            destinationViewController.rightAnimatableViewConstraint.constant = isDismissed ? endHorizontalConstraint : startHorizontalConstraint
+            destinationViewController.leftAnimatableViewConstraint.constant = isDismissed ? endHorizontalConstraint : startHorizontalConstraint
+        case .none:
+            break
+        }
+        destinationViewController.view.layoutIfNeeded()
+        
         currentAnimator.addAnimations {
-            destinationViewController.animatableView.transform = self.isDismissed ? startTransform : endTransform
+            switch sourceViewController.sourceCropMode {
+            case .verticalCrop:
+                destinationViewController.topAnimatableViewConstraint.constant = self.isDismissed ? startVerticalConstraint : endVerticalConstraint
+                destinationViewController.bottomAnimatableViewConstraint.constant = self.isDismissed ? startVerticalConstraint: endVerticalConstraint
+            case .horizontalCrop:
+                destinationViewController.rightAnimatableViewConstraint.constant = self.isDismissed ? startHorizontalConstraint : endHorizontalConstraint
+                destinationViewController.leftAnimatableViewConstraint.constant = self.isDismissed ? startHorizontalConstraint : endHorizontalConstraint
+            case .none:
+                break
+            }
+            destinationViewController.view.layoutIfNeeded()
+        }
+    }
+    
+    func animateViewTransform(sourceFrame: CGRect, destinationFrame: CGRect) {
+        guard let sourceViewController = sourceViewController, let destinationViewController = destinationViewController else {
+            return
+        }
+        
+        let xDisplacement = sourceFrame.midX - destinationFrame.midX
+        let yDisplacement = sourceFrame.midY - destinationFrame.midY
+        
+        let scale: CGFloat
+        switch sourceViewController.sourceCropMode {
+        case .verticalCrop:
+            scale = sourceFrame.size.width / destinationFrame.size.width
+        case .horizontalCrop:
+            scale = sourceFrame.size.height / destinationFrame.size.height
+        case .none:
+            scale = 1
+        }
+        
+        let startSourceTransform: CGAffineTransform = .identity
+        let startDestinationTransform = CGAffineTransform(translationX: xDisplacement, y: yDisplacement)//.scaledBy(x: scale, y: scale)
+        
+        let endSourceTransform = CGAffineTransform(translationX: -xDisplacement, y: -yDisplacement)//.scaledBy(x: 1 / scale, y: 1 / scale)
+        let endDestinationTransform: CGAffineTransform = .identity
+        
+        sourceViewController.sourceView.transform = isDismissed ? endSourceTransform : startSourceTransform
+        destinationViewController.animatableView.transform = isDismissed ? endDestinationTransform : startDestinationTransform
+        currentAnimator.addAnimations {
+            sourceViewController.sourceView.transform = self.isDismissed ? startSourceTransform : endSourceTransform
+            destinationViewController.animatableView.transform = self.isDismissed ? startDestinationTransform : endDestinationTransform
+        }
+        currentAnimator.addCompletion { _ in
+            sourceViewController.sourceView.transform = .identity
         }
     }
     
     func animateBackground() {
-        let relativeDuration = 0.25
-        if !isDismissed {
-            destinationViewController?.view.backgroundColor = .clear
-        }
+        destinationViewController?.view.backgroundColor = isDismissed ? .white : .clear
         currentAnimator.addAnimations {
-            UIView.animateKeyframes(withDuration: self.transitionDuration, delay: 0, animations: {
-                UIView.addKeyframe(withRelativeStartTime: self.isDismissed ? 0 : 1 - relativeDuration, relativeDuration: relativeDuration) {
-                    self.destinationViewController?.view.backgroundColor = self.isDismissed ? .clear : .white
-                }
-            })
+            self.destinationViewController?.view.backgroundColor = self.isDismissed ? .clear : .white
         }
     }
     
@@ -131,7 +193,7 @@ private extension GalleryTransitionAnimator {
         
         let translation = recognizer.translation(in: recognizerView)
         var progress = abs(translation.y / 200.0)
-        progress = min(max(progress, 0.01), 0.99)
+        progress = min(max(progress, 0.001), 0.999)
         
         switch recognizer.state {
         case .began:
