@@ -11,7 +11,7 @@ import UIKit
 
 public protocol GalleryDelegate: AnyObject {
     func gallery(galleryViewController: GalleryViewController, didScrollToItemAt indexPath: IndexPath)
-    func didCloseGalleryView()
+    func didClose(galleryViewController: GalleryViewController)
 }
 
 open class GalleryViewController: UIViewController {
@@ -52,6 +52,11 @@ open class GalleryViewController: UIViewController {
     open override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         hideControls(animated: true)
+    }
+    
+    open override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        delegate?.didClose(galleryViewController: self)
     }
     
     @IBAction private func closeButtonPressed() {
