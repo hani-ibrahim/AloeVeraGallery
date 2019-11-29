@@ -36,22 +36,22 @@ open class GalleryViewController: UIViewController {
     public var sections: [SectionConfiguring] = []
     
     private lazy var dataSource = CollectionViewDataSource(sections: sections)
-    private let controlsAnimationDuration: TimeInterval = 0.2
+    private let viewContentAnimationDuration: TimeInterval = 0.2
     
     open override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
-        hideControls(animated: false)
+        hideViewContent(animated: false)
     }
     
     open override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        showControls()
+        showViewContent()
     }
     
     open override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        hideControls(animated: true)
+        hideViewContent(animated: true)
     }
     
     open override func viewDidDisappear(_ animated: Bool) {
@@ -85,8 +85,8 @@ extension GalleryViewController: UICollectionViewDelegate {
 }
 
 extension GalleryViewController: GalleryTransitionDestinationViewController {
-    public func animatableViewFrame(relativeTo view: UIView) -> CGRect {
-        view.convert(pagedCollectionView.frame, to: view)
+    public func animatableViewFrame(relativeTo containerView: UIView) -> CGRect {
+        view.bounds
     }
 }
 
@@ -131,19 +131,21 @@ private extension GalleryViewController {
         }
     }
     
-    func hideControls(animated: Bool) {
-        UIViewPropertyAnimator.runningPropertyAnimator(withDuration: animated ? controlsAnimationDuration : 0, delay: 0, animations: {
-            self.closeButton.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
-            self.closeButton.alpha = 0
-            self.pageControl.alpha = 0
-        }, completion: nil)
-    }
-    
-    func showControls() {
-        UIViewPropertyAnimator(duration: controlsAnimationDuration, dampingRatio: 0.5) {
+    func showViewContent() {
+        UIViewPropertyAnimator(duration: viewContentAnimationDuration, dampingRatio: 0.5) {
+//            self.view.backgroundColor = .white
             self.closeButton.transform = .identity
             self.closeButton.alpha = 1
             self.pageControl.alpha = 1
         }.startAnimation()
+    }
+    
+    func hideViewContent(animated: Bool) {
+        UIViewPropertyAnimator.runningPropertyAnimator(withDuration: animated ? viewContentAnimationDuration : 0, delay: 0, animations: {
+//            self.view.backgroundColor = .clear
+            self.closeButton.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
+            self.closeButton.alpha = 0
+            self.pageControl.alpha = 0
+        }, completion: nil)
     }
 }

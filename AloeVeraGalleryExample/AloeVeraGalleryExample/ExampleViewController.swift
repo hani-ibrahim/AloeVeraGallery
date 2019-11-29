@@ -28,6 +28,7 @@ private extension ExampleViewController {
     func setupView() {
         pagedCollectionView.collectionViewLayout.pageSpacing = 20
         pagedCollectionView.collectionViewLayout.scrollDirection = .horizontal
+        pagedCollectionView.collectionViewLayout.shouldRespectAdjustedContentInset = false
         pagedCollectionView.collectionView.dataSource = dataSource
         pagedCollectionView.collectionView.delegate = self
         dataSource.registerCells(in: pagedCollectionView.collectionView)
@@ -48,7 +49,7 @@ extension ExampleViewController: UICollectionViewDelegate {
         viewController.startingIndexPath = indexPath
         viewController.delegate = self
         viewController.transitioningDelegate = transitionDelegate
-        viewController.modalPresentationStyle = .fullScreen
+        viewController.modalPresentationStyle = .overFullScreen
         present(viewController, animated: true)
     }
 }
@@ -67,8 +68,8 @@ extension ExampleViewController: GalleryTransitionSourceViewController {
         )
     }
     
-    func sourceViewFrame(relativeTo view: UIView) -> CGRect {
-        view.convert(pagedCollectionView.frame, to: view)
+    func sourceViewFrame(relativeTo containerView: UIView) -> CGRect {
+        view.convert(pagedCollectionView.frame, to: containerView)
     }
 }
 
