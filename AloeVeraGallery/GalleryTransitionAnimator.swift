@@ -33,7 +33,10 @@ public final class GalleryTransitionAnimator: UIPercentDrivenInteractiveTransiti
     private var destinationViewController: (UIViewController & GalleryTransitionDestinationViewController)?
     private var currentContext: UIViewControllerContextTransitioning?
     private var currentAnimator = UIViewPropertyAnimator()
+    private var transitionData: TransitionData?
     private var interactiveDismissStartLocation: CGPoint = .zero
+    private var interactiveDismissDisplacement: CGPoint = .zero
+    private var shouldCancelInteractiveDismiss = false
     
     public init(duration: TimeInterval) {
         self.transitionDuration = duration
@@ -65,12 +68,18 @@ extension GalleryTransitionAnimator: UIViewControllerAnimatedTransitioning {
             transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
             return currentAnimator
         }
-        let sourceFrame = sourceViewController.sourceViewFrame(relativeTo: transitionContext.containerView)
-        let destinationFrame = destinationViewController.animatableViewFrame(relativeTo: transitionContext.containerView)
+        
+        transitionData = TransitionData(
+            sourceViewController: sourceViewController,
+            destinationViewController: destinationViewController,
+            sourceFrame: sourceViewController.sourceViewFrame(relativeTo: transitionContext.containerView),
+            destinationFrame: destinationViewController.animatableViewFrame(relativeTo: transitionContext.containerView)
+        )
+        transitionData?.sourceViewController.sourceView.alpha = 0
         currentAnimator = UIViewPropertyAnimator(duration: transitionDuration, dampingRatio: 0.8)
-        animateViewConstraint(sourceFrame: sourceFrame, destinationFrame: destinationFrame)
-        animateViewTransform(sourceFrame: sourceFrame, destinationFrame: destinationFrame)
-        animateViewBackground()
+        if !isInteractive, let transitionData = transitionData {
+            addAnimations(with: transitionData, on: currentAnimator, isDismissed: isDismissed, shouldConfigureInitialValue: true)
+        }
         currentAnimator.addCompletion { _ in
             transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
         }
@@ -86,93 +95,94 @@ private extension GalleryTransitionAnimator {
             let sourceViewController = context.viewController(forKey: isDismissed ? .to : .from ) as? UIViewController & GalleryTransitionSourceViewController else {
                 return
         }
-        
         self.sourceViewController = sourceViewController
         context.containerView.addSubview(destinationViewController.view)
         destinationViewController.view.frame = isDismissed ? context.initialFrame(for: destinationViewController) : context.finalFrame(for: destinationViewController)
     }
     
-    func animateViewConstraint(sourceFrame: CGRect, destinationFrame: CGRect) {
-        guard let sourceViewController = sourceViewController, let destinationViewController = destinationViewController else {
-            return
+    func addAnimations(with data: TransitionData, on animator: UIViewPropertyAnimator, isDismissed: Bool, shouldConfigureInitialValue: Bool) {
+        animateViewConstraint(with: data, on: animator, isDismissed: isDismissed, shouldConfigureInitialValue: shouldConfigureInitialValue)
+        animateViewTransform(with: data, on: animator, isDismissed: isDismissed, shouldConfigureInitialValue: shouldConfigureInitialValue)
+        configureSourceViewController(with: data, on: animator)
+        configureDestinationViewController(with: data, on: animator, isDismissed: isDismissed, shouldConfigureInitialValue: shouldConfigureInitialValue)
+    }
+    
+    func animateViewConstraint(with data: TransitionData, on animator: UIViewPropertyAnimator, isDismissed: Bool, shouldConfigureInitialValue: Bool) {
+        let difference = data.sourceViewController.metadata.difference(sourceFrame: data.sourceFrame, destinationFrame: data.destinationFrame)
+        
+        if shouldConfigureInitialValue {
+            data.destinationViewController.topAnimatableViewConstraint.constant = isDismissed ? 0 : difference.y
+            data.destinationViewController.bottomAnimatableViewConstraint.constant = isDismissed ? 0 : difference.y
+            data.destinationViewController.rightAnimatableViewConstraint.constant = isDismissed ? 0 : difference.x
+            data.destinationViewController.leftAnimatableViewConstraint.constant = isDismissed ? 0 : difference.x
+            data.destinationViewController.view.layoutIfNeeded()
         }
         
-        let difference = sourceViewController.metadata.difference(sourceFrame: sourceFrame, destinationFrame: destinationFrame)
-        
-        destinationViewController.topAnimatableViewConstraint.constant = isDismissed ? 0 : difference.halfVertical
-        destinationViewController.bottomAnimatableViewConstraint.constant = isDismissed ? 0 : difference.halfVertical
-        destinationViewController.rightAnimatableViewConstraint.constant = isDismissed ? 0 : difference.halfHorizontal
-        destinationViewController.leftAnimatableViewConstraint.constant = isDismissed ? 0 : difference.halfHorizontal
-        destinationViewController.view.layoutIfNeeded()
-        
-        currentAnimator.addAnimations {
-            destinationViewController.topAnimatableViewConstraint.constant = self.isDismissed ? difference.halfVertical : 0
-            destinationViewController.bottomAnimatableViewConstraint.constant = self.isDismissed ? difference.halfVertical : 0
-            destinationViewController.rightAnimatableViewConstraint.constant = self.isDismissed ? difference.halfHorizontal : 0
-            destinationViewController.leftAnimatableViewConstraint.constant = self.isDismissed ? difference.halfHorizontal : 0
-            destinationViewController.view.layoutIfNeeded()
+        animator.addAnimations {
+            data.destinationViewController.topAnimatableViewConstraint.constant = isDismissed ? difference.y : 0
+            data.destinationViewController.bottomAnimatableViewConstraint.constant = isDismissed ? difference.y : 0
+            data.destinationViewController.rightAnimatableViewConstraint.constant = isDismissed ? difference.x : 0
+            data.destinationViewController.leftAnimatableViewConstraint.constant = isDismissed ? difference.x : 0
+            data.destinationViewController.view.layoutIfNeeded()
         }
     }
     
-    func animateViewTransform(sourceFrame: CGRect, destinationFrame: CGRect) {
-        guard let sourceViewController = sourceViewController, let destinationViewController = destinationViewController else {
-            return
+    func animateViewTransform(with data: TransitionData, on animator: UIViewPropertyAnimator, isDismissed: Bool, shouldConfigureInitialValue: Bool) {
+        let displacement = data.sourceViewController.metadata.displacement(sourceFrame: data.sourceFrame, destinationFrame: data.destinationFrame)
+        let scale = data.sourceViewController.metadata.scale(sourceFrame: data.sourceFrame, destinationFrame: data.destinationFrame)
+        let startTransform = CGAffineTransform(translationX: displacement.x, y: displacement.y).scaledBy(x: scale, y: scale)
+        let endTransform: CGAffineTransform = .identity
+        
+        if shouldConfigureInitialValue {
+            data.destinationViewController.animatableView.transform = isDismissed ? endTransform : startTransform
         }
-        
-        let displacement = sourceViewController.metadata.displacement(sourceFrame: sourceFrame, destinationFrame: destinationFrame)
-        let scale = sourceViewController.metadata.scale(sourceFrame: sourceFrame, destinationFrame: destinationFrame)
-        
-        let startSourceTransform: CGAffineTransform = .identity
-        let startDestinationTransform = CGAffineTransform(translationX: displacement.destinationHorizontal, y: displacement.destinationVertical).scaledBy(x: scale.destination, y: scale.destination)
-        
-        let endSourceTransform = CGAffineTransform(translationX: displacement.sourceHorizontal, y: displacement.sourceVertical).scaledBy(x: scale.source, y: scale.source)
-        let endDestinationTransform: CGAffineTransform = .identity
-        
-        sourceViewController.sourceView.transform = isDismissed ? endSourceTransform : startSourceTransform
-        destinationViewController.animatableView.transform = isDismissed ? endDestinationTransform : startDestinationTransform
-        currentAnimator.addAnimations {
-            sourceViewController.sourceView.transform = self.isDismissed ? startSourceTransform : endSourceTransform
-            destinationViewController.animatableView.transform = self.isDismissed ? startDestinationTransform : endDestinationTransform
-        }
-        currentAnimator.addCompletion { _ in
-            sourceViewController.sourceView.transform = .identity
+        animator.addAnimations {
+            data.destinationViewController.animatableView.transform = isDismissed ? startTransform : endTransform
         }
     }
     
-    func animateViewBackground() {
-        destinationViewController?.view.backgroundColor = isDismissed ? .white : .clear
-        currentAnimator.addAnimations {
-            self.destinationViewController?.view.backgroundColor = self.isDismissed ? .clear : .white
+    func configureSourceViewController(with data: TransitionData, on animator: UIViewPropertyAnimator) {
+        animator.addCompletion { _ in
+            data.sourceViewController.sourceView.alpha = 1
+        }
+    }
+    
+    func configureDestinationViewController(with data: TransitionData, on animator: UIViewPropertyAnimator, isDismissed: Bool, shouldConfigureInitialValue: Bool) {
+        if shouldConfigureInitialValue {
+            data.destinationViewController.view.backgroundColor = isDismissed ? .white : .clear
+        }
+        animator.addAnimations {
+            data.destinationViewController.view.backgroundColor = isDismissed ? .clear : .white
         }
     }
     
     @objc
     func panGestureRecognized(recognizer: UIPanGestureRecognizer) {
-        guard let recognizerView = recognizer.view?.superview else {
-            return
-        }
-        
         let location = recognizer.translation(in: currentContext?.containerView)
-        
-        let translation = recognizer.translation(in: recognizerView)
-        var progress = abs(translation.y / 200.0)
-        progress = min(max(progress, 0.001), 0.999)
-        
         switch recognizer.state {
         case .began:
             interactiveDismissStartLocation = location
             isInteractive = true
             destinationViewController?.dismiss(animated: true)
+            UIViewPropertyAnimator.runningPropertyAnimator(withDuration: transitionDuration, delay: 0, animations: {
+                self.destinationViewController?.view.backgroundColor = .clear
+            }, completion: nil)
         case .changed:
-//            updatePosition(for: location)
-            
-            update(progress)
+            updatePosition(for: location)
         case .ended, .cancelled:
-//            if progress < 0.5 {
-//                cancel()
-//            } else {
-                finish()
-//            }
+            if let transitionData = transitionData, let currentContext = currentContext {
+                if shouldCancelInteractiveDismiss {
+                    let cancelAnimator = UIViewPropertyAnimator(duration: transitionDuration, dampingRatio: 0.8)
+                    addAnimations(with: transitionData, on: cancelAnimator, isDismissed: false, shouldConfigureInitialValue: false)
+                    cancelAnimator.addCompletion { _ in
+                        currentContext.completeTransition(false)
+                    }
+                    cancelAnimator.startAnimation()
+                } else {
+                    addAnimations(with: transitionData, on: currentAnimator, isDismissed: true, shouldConfigureInitialValue: false)
+                    finish()
+                }
+            }
             isInteractive = false
         default:
             break
@@ -180,10 +190,19 @@ private extension GalleryTransitionAnimator {
     }
     
     func updatePosition(for location: CGPoint) {
-        let displacement = CGPoint(x: location.x - interactiveDismissStartLocation.x, y: location.y - interactiveDismissStartLocation.y)
-        print("displacement: \(displacement)")
-        print(currentAnimator.isRunning)
-        destinationViewController?.animatableView.transform = CGAffineTransform(translationX: displacement.x, y: displacement.y)
-        sourceViewController?.sourceView.transform = CGAffineTransform(translationX: displacement.x, y: displacement.y)
+        var displacement = CGPoint(x: location.x - interactiveDismissStartLocation.x, y: location.y - interactiveDismissStartLocation.y)
+        displacement.y = displacement.y < 0 ? displacement.y / 2 : displacement.y
+        let scale = max(min(1 - 0.002 * interactiveDismissDisplacement.y, 1.2), 0.8) // solving linear equation to scale from 1 to 0.8 over 100 pt displacement
+        let transform = CGAffineTransform(translationX: displacement.x, y: displacement.y).scaledBy(x: scale, y: scale)
+        destinationViewController?.animatableView.transform = transform
+        shouldCancelInteractiveDismiss = displacement.y < 0 || displacement.y < interactiveDismissDisplacement.y
+        interactiveDismissDisplacement = displacement
     }
+}
+
+private struct TransitionData {
+    let sourceViewController: UIViewController & GalleryTransitionSourceViewController
+    let destinationViewController: UIViewController & GalleryTransitionDestinationViewController
+    let sourceFrame: CGRect
+    let destinationFrame: CGRect
 }

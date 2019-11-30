@@ -133,7 +133,6 @@ private extension GalleryViewController {
     
     func showViewContent() {
         UIViewPropertyAnimator(duration: viewContentAnimationDuration, dampingRatio: 0.5) {
-//            self.view.backgroundColor = .white
             self.closeButton.transform = .identity
             self.closeButton.alpha = 1
             self.pageControl.alpha = 1
@@ -142,7 +141,6 @@ private extension GalleryViewController {
     
     func hideViewContent(animated: Bool) {
         UIViewPropertyAnimator.runningPropertyAnimator(withDuration: animated ? viewContentAnimationDuration : 0, delay: 0, animations: {
-//            self.view.backgroundColor = .clear
             self.closeButton.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
             self.closeButton.alpha = 0
             self.pageControl.alpha = 0

@@ -21,48 +21,29 @@ public struct GalleryTransitionMetadata {
 }
 
 extension GalleryTransitionMetadata {
-    struct Difference {
-        let halfVertical: CGFloat
-        let halfHorizontal: CGFloat
-    }
-    
-    struct Displacement {
-        let sourceVertical: CGFloat
-        let sourceHorizontal: CGFloat
-        let destinationVertical: CGFloat
-        let destinationHorizontal: CGFloat
-    }
-    
-    struct Scale {
-        let source: CGFloat
-        let destination: CGFloat
-    }
-    
-    func difference(sourceFrame: CGRect, destinationFrame: CGRect) -> Difference {
+    func difference(sourceFrame: CGRect, destinationFrame: CGRect) -> CGPoint {
         let sourcePadding = padding(in: sourceFrame, fillMode: sourceFillMode)
         let destinationPadding = padding(in: destinationFrame, fillMode: destinationFillMode)
-        let destinationScale = scale(sourceFrame: sourceFrame, destinationFrame: destinationFrame).destination
-        return Difference(
-            halfVertical: sourcePadding.vertical / destinationScale - destinationPadding.vertical,
-            halfHorizontal: sourcePadding.horizontal / destinationScale - destinationPadding.horizontal
+        let destinationScale = scale(sourceFrame: sourceFrame, destinationFrame: destinationFrame)
+        return CGPoint(
+            x: sourcePadding.horizontal / destinationScale - destinationPadding.horizontal,
+            y: sourcePadding.vertical / destinationScale - destinationPadding.vertical
         )
     }
     
-    func displacement(sourceFrame: CGRect, destinationFrame: CGRect) -> Displacement {
-        Displacement(
-            sourceVertical: destinationFrame.midY - sourceFrame.midY,
-            sourceHorizontal: destinationFrame.midX - sourceFrame.midX,
-            destinationVertical: sourceFrame.midY - destinationFrame.midY,
-            destinationHorizontal: sourceFrame.midX - destinationFrame.midX
+    func displacement(sourceFrame: CGRect, destinationFrame: CGRect) -> CGPoint {
+        CGPoint(
+            x: sourceFrame.midX - destinationFrame.midX,
+            y: sourceFrame.midY - destinationFrame.midY
         )
     }
     
-    func scale(sourceFrame: CGRect, destinationFrame: CGRect) -> Scale {
+    func scale(sourceFrame: CGRect, destinationFrame: CGRect) -> CGFloat {
         let sourcePadding = padding(in: sourceFrame, fillMode: sourceFillMode)
         let destinationPadding = padding(in: destinationFrame, fillMode: destinationFillMode)
         let sourceContentWidth = sourceFrame.size.width + sourcePadding.horizontal * 2
         let destinationContentWidth = destinationFrame.size.width + destinationPadding.horizontal * 2
-        return Scale(source: destinationContentWidth / sourceContentWidth, destination: sourceContentWidth / destinationContentWidth)
+        return sourceContentWidth / destinationContentWidth
     }
 }
 
