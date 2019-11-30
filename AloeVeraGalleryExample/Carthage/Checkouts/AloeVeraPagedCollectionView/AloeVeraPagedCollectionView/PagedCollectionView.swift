@@ -61,6 +61,12 @@ public class PagedCollectionView: UIView {
         collectionViewLayout.scrollToItem(at: indexPath, animated: animated)
     }
     
+    public override var backgroundColor: UIColor? {
+        didSet {
+            collectionView.backgroundColor = backgroundColor
+        }
+    }
+    
     public override func layoutSubviews() {
         super.layoutSubviews()
         if let indexPath = nextViewLayoutIndexpath {

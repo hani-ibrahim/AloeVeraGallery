@@ -121,7 +121,7 @@ private extension GalleryViewController {
     }
     
     func scrollingStopping(at contentOffset: CGPoint, didEndScrollingAnimation: Bool) {
-        let bounds = CGRect(origin: contentOffset, size: pagedCollectionView.bounds.size)
+        let bounds = CGRect(origin: contentOffset, size: pagedCollectionView.collectionView.bounds.size)
         guard let currentIndexPath = pagedCollectionView.collectionViewLayout.centeredItemIndexPath(in: bounds) else {
             return
         }
