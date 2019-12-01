@@ -42,13 +42,9 @@ private extension ExampleViewController {
 
 extension ExampleViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let cell = collectionView.cellForItem(at: indexPath) else {
-            return
-        }
-        
         let imageSize = UIImage(named: "test-image-\(indexPath.item)")!.size
         transitionDelegate = GalleryTransitionDelegate(
-            sourceView: cell,
+            sourceView: pagedCollectionView,
             metadata: GalleryTransitionMetadata(
                 contentAspectRatio: imageSize.width / imageSize.height,
                 sourceFillMode: .aspectFill,
