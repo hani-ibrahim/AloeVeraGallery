@@ -50,9 +50,18 @@ open class GalleryViewController: UIViewController, GalleryTransitionDestination
     /// The sections that are used by the data source to display content in the collection, should be configured before `viewDidLoad` is being called
     public var sections: [SectionConfiguring] = []
     
-    private lazy var dataSource = DataSource(sections: sections)
     private var didTapCloseButton = false
     private let viewContentAnimationDuration: TimeInterval = 0.2
+    private lazy var dataSource = DataSource(sections: sections)
+    private lazy var scrollingHandler = ScrollingHandler(collectionView: collectionView) { [weak self] indexPath, didEndScrolling in
+        guard let self = self else {
+            return
+        }
+        self.pageControl.currentPage = self.dataSource.absoluteIndex(forItemAt: indexPath)
+        if didEndScrolling {
+            self.delegate?.gallery(galleryViewController: self, didScrollToItemAt: indexPath)
+        }
+    }
     
     open override func viewDidLoad() {
         super.viewDidLoad()
@@ -83,21 +92,19 @@ open class GalleryViewController: UIViewController, GalleryTransitionDestination
 
 extension GalleryViewController: UICollectionViewDelegate {
     open func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        scrollingStopping(at: targetContentOffset.pointee, didEndScrollingAnimation: false)
+        scrollingHandler.scrollViewWillEndDragging(targetContentOffset: targetContentOffset)
     }
     
     open func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        if !decelerate {
-            scrollingStopping(at: scrollView.bounds.origin, didEndScrollingAnimation: true)
-        }
+        scrollingHandler.scrollViewDidEndDragging(willDecelerate: decelerate)
     }
     
     open func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        scrollingStopping(at: scrollView.bounds.origin, didEndScrollingAnimation: true)
+        scrollingHandler.scrollViewDidEndDecelerating()
     }
     
     open func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
-        scrollingStopping(at: scrollView.bounds.origin, didEndScrollingAnimation: true)
+        scrollingHandler.scrollViewDidEndScrollingAnimation()
     }
 }
 
@@ -129,17 +136,6 @@ private extension GalleryViewController {
         }
         collectionView.updateIndexPathForNextViewLayout(with: indexPath)
         pageControl.currentPage = dataSource.absoluteIndex(forItemAt: indexPath)
-    }
-    
-    func scrollingStopping(at contentOffset: CGPoint, didEndScrollingAnimation: Bool) {
-        let bounds = CGRect(origin: contentOffset, size: collectionView.collectionView.bounds.size)
-        guard let currentIndexPath = collectionView.collectionViewLayout.centeredItemIndexPath(in: bounds) else {
-            return
-        }
-        pageControl.currentPage = dataSource.absoluteIndex(forItemAt: currentIndexPath)
-        if didEndScrollingAnimation {
-            delegate?.gallery(galleryViewController: self, didScrollToItemAt: currentIndexPath)
-        }
     }
     
     func showViewContent() {
