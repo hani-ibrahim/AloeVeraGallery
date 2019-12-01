@@ -8,12 +8,18 @@
 
 import UIKit
 
+public protocol GalleryTransitionSource {
+    var sourceView: UIView { get }
+    var metadata: GalleryTransitionMetadata { get }
+    func sourceViewFrame(relativeTo containerView: UIView) -> CGRect
+}
+
 public final class GalleryTransitionDelegate: NSObject {
     
     private let transitionAnimator: GalleryTransitionAnimator
     
-    public init(duration: TimeInterval = 0.5) {
-        transitionAnimator = GalleryTransitionAnimator(duration: duration)
+    public init(source: GalleryTransitionSource, duration: TimeInterval = 0.5) {
+        transitionAnimator = GalleryTransitionAnimator(source: source, duration: duration)
     }
 }
 

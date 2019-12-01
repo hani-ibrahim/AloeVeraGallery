@@ -13,27 +13,28 @@ final class PagedViewController: UIViewController {
     
     @IBOutlet private var pagedCollectionView: PagedCollectionView!
     
-    private let data = (0..<10).map { String($0) }
+    private var section = PagedCollectionViewCell.Section(cellSource: .xib)
+    private lazy var dataSource = DataSource(sections: [section])
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        pagedCollectionView.collectionViewLayout.pageSpacing = 50
-        pagedCollectionView.collectionViewLayout.pageInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-        pagedCollectionView.collectionViewLayout.shouldRespectAdjustedContentInset = false
-        pagedCollectionView.collectionView.dataSource = self
-        pagedCollectionView.collectionView.registerCell(ofType: PagedCollectionViewCell.self)
-        pagedCollectionView.configure()
+        setupCollectionView()
+        setupDataSource()
     }
 }
 
-extension PagedViewController: UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        data.count
+private extension PagedViewController {
+    func setupCollectionView() {
+        pagedCollectionView.collectionViewLayout.pageSpacing = 50
+        pagedCollectionView.collectionViewLayout.pageInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        pagedCollectionView.collectionViewLayout.shouldRespectAdjustedContentInset = false
+        pagedCollectionView.configure()
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueCell(ofType: PagedCollectionViewCell.self, at: indexPath)
-        cell.titleLabel.text = data[indexPath.row]
-        return cell
+    func setupDataSource() {
+        let viewModels = (0..<10).map { PagedCellViewModel(title: String($0)) }
+        section.update(with: viewModels)
+        section.registerCell(in: pagedCollectionView.collectionView)
+        pagedCollectionView.collectionView.dataSource = dataSource
     }
 }

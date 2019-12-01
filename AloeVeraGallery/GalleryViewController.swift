@@ -9,18 +9,29 @@
 import AloeVeraPagedCollectionView
 import UIKit
 
-public protocol GalleryDelegate: AnyObject {
-    func gallery(galleryViewController: GalleryViewController, didScrollToItemAt indexPath: IndexPath)
-    func didClose(galleryViewController: GalleryViewController)
+/// Possible ways for the user to close the gallery
+public enum CloseSource {
+    case closeButton
+    case dragging
 }
 
+/// Delegate for `GalleryViewController` to know if the user scroll the gallery or how the user closed it
+public protocol GalleryDelegate: AnyObject {
+    func gallery(galleryViewController: GalleryViewController, didScrollToItemAt indexPath: IndexPath)
+    func didClose(galleryViewController: GalleryViewController, source: CloseSource)
+}
+
+/// GalleryViewController can be displayed by two ways
+/// 1- As a normal view controller that can displayed modaly or in a navigation controller
+/// 2-  By a custom gallery transition using `GalleryTransitionDelegate`, for that to work properly please configure `modalPresentationStyle` to be `.overFullScreen`
 open class GalleryViewController: UIViewController {
     
+    /// Handy function to initialize a new instance of the view controller
     public static func makeViewController() -> GalleryViewController {
         GalleryViewController(nibName: nil, bundle: Bundle(for: GalleryViewController.self))
     }
     
-    @IBOutlet public private(set) var pagedCollectionView: PagedCollectionView!
+    @IBOutlet public private(set) var collectionView: PagedCollectionView!
     @IBOutlet public private(set) var closeButton: UIButton!
     @IBOutlet public private(set) var pageControl: UIPageControl!
     
@@ -30,12 +41,17 @@ open class GalleryViewController: UIViewController {
     @IBOutlet public private(set) var rightAnimatableViewConstraint: NSLayoutConstraint!
     @IBOutlet public private(set) var leftAnimatableViewConstraint: NSLayoutConstraint!
     
+    /// The `delegate` of the gallery view controller to know how the user interact with the gallery
     public weak var delegate: GalleryDelegate?
+    /// The spacing between the cells in the gallery, should be configured before `viewDidLoad` is being called
     public var pageSpacing: CGFloat = 0
+    /// The starting index to open the gallery at, should be configured before `viewDidLoad` is being called
     public var startingIndexPath: IndexPath?
+    /// The sections that are used by the data source to display content in the collection, should be configured before `viewDidLoad` is being called
     public var sections: [SectionConfiguring] = []
     
-    private lazy var dataSource = CollectionViewDataSource(sections: sections)
+    private lazy var dataSource = DataSource(sections: sections)
+    private var didTapCloseButton = false
     private let viewContentAnimationDuration: TimeInterval = 0.2
     
     open override func viewDidLoad() {
@@ -56,10 +72,11 @@ open class GalleryViewController: UIViewController {
     
     open override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        delegate?.didClose(galleryViewController: self)
+        delegate?.didClose(galleryViewController: self, source: didTapCloseButton ? .closeButton : .dragging)
     }
     
     @IBAction private func closeButtonPressed() {
+        didTapCloseButton = true
         dismiss(animated: true)
     }
 }
@@ -103,26 +120,26 @@ private extension GalleryViewController {
     }
     
     func setupCollectionView() {
-        pagedCollectionView.collectionViewLayout.pageSpacing = pageSpacing
-        pagedCollectionView.collectionViewLayout.shouldRespectAdjustedContentInset = false
-        pagedCollectionView.collectionView.showsHorizontalScrollIndicator = false
-        pagedCollectionView.collectionView.dataSource = dataSource
-        pagedCollectionView.collectionView.delegate = self
-        dataSource.registerCells(in: pagedCollectionView.collectionView)
-        pagedCollectionView.configure()
+        collectionView.collectionViewLayout.pageSpacing = pageSpacing
+        collectionView.collectionViewLayout.shouldRespectAdjustedContentInset = false
+        collectionView.collectionView.showsHorizontalScrollIndicator = false
+        collectionView.collectionView.dataSource = dataSource
+        collectionView.collectionView.delegate = self
+        dataSource.registerCells(in: collectionView.collectionView)
+        collectionView.configure()
     }
     
     func setupStartingIndexPath() {
         guard let indexPath = startingIndexPath else {
             return
         }
-        pagedCollectionView.updateIndexPathForNextViewLayout(with: indexPath)
+        collectionView.updateIndexPathForNextViewLayout(with: indexPath)
         pageControl.currentPage = dataSource.absoluteIndex(forItemAt: indexPath)
     }
     
     func scrollingStopping(at contentOffset: CGPoint, didEndScrollingAnimation: Bool) {
-        let bounds = CGRect(origin: contentOffset, size: pagedCollectionView.collectionView.bounds.size)
-        guard let currentIndexPath = pagedCollectionView.collectionViewLayout.centeredItemIndexPath(in: bounds) else {
+        let bounds = CGRect(origin: contentOffset, size: collectionView.collectionView.bounds.size)
+        guard let currentIndexPath = collectionView.collectionViewLayout.centeredItemIndexPath(in: bounds) else {
             return
         }
         pageControl.currentPage = dataSource.absoluteIndex(forItemAt: currentIndexPath)

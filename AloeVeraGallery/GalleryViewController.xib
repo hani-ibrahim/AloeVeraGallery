@@ -13,9 +13,9 @@
                 <outlet property="animatableView" destination="Z6X-mG-Tbp" id="8BM-IA-4zv"/>
                 <outlet property="bottomAnimatableViewConstraint" destination="Up4-fa-iBj" id="gHy-c7-Ym9"/>
                 <outlet property="closeButton" destination="vJH-fA-3NO" id="ys4-42-NPo"/>
+                <outlet property="collectionView" destination="7NU-7I-dSq" id="XRs-vy-wfj"/>
                 <outlet property="leftAnimatableViewConstraint" destination="aZ2-ew-e5q" id="t4E-z9-xwX"/>
                 <outlet property="pageControl" destination="G4A-e3-iEn" id="9ij-NX-bY8"/>
-                <outlet property="pagedCollectionView" destination="7NU-7I-dSq" id="r6k-3c-73q"/>
                 <outlet property="rightAnimatableViewConstraint" destination="CuK-gX-s0d" id="mSi-Mb-cKB"/>
                 <outlet property="topAnimatableViewConstraint" destination="wNT-7I-tEG" id="LU2-nC-7lA"/>
                 <outlet property="view" destination="iN0-l3-epB" id="pe6-ld-9Vl"/>

@@ -1,19 +1,19 @@
 //
 //  CellIdentifiable.swift
-//  AloeVeraGallery
+//  AloeVeraPagedCollectionView
 //
-//  Created by Hani on 09.11.19.
+//  Created by Hani on 01.12.19.
 //  Copyright © 2019 Hani. All rights reserved.
 //
 
 import UIKit
 
 public protocol CellIdentifiable {
-    static var identifier: String { get }
+    static var cellIdentifier: String { get }
 }
 
 extension CellIdentifiable {
-    public static var identifier: String {
+    public static var cellIdentifier: String {
         String(describing: self)
     }
 }

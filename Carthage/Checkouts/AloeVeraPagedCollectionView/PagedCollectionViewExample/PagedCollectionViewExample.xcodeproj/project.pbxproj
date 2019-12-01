@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		3793711F2348B4BF00540553 /* CenteredItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3793711E2348B4BF00540553 /* CenteredItemCollectionViewCell.swift */; };
-		379371232348B77E00540553 /* UICollectionView+dequeue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379371222348B77E00540553 /* UICollectionView+dequeue.swift */; };
 		37A8C11F236E5A9D00C9D896 /* CenteredItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37A8C11E236E5A9D00C9D896 /* CenteredItemViewController.swift */; };
 		37A8C121236E5AA900C9D896 /* PagedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37A8C120236E5AA900C9D896 /* PagedViewController.swift */; };
 		37D980122301E2FB00273C52 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37D980112301E2FB00273C52 /* AppDelegate.swift */; };
@@ -54,7 +53,6 @@
 
 /* Begin PBXFileReference section */
 		3793711E2348B4BF00540553 /* CenteredItemCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CenteredItemCollectionViewCell.swift; sourceTree = "<group>"; };
-		379371222348B77E00540553 /* UICollectionView+dequeue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionView+dequeue.swift"; sourceTree = "<group>"; };
 		37A8C11E236E5A9D00C9D896 /* CenteredItemViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CenteredItemViewController.swift; sourceTree = "<group>"; };
 		37A8C120236E5AA900C9D896 /* PagedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagedViewController.swift; sourceTree = "<group>"; };
 		37D9800E2301E2FB00273C52 /* PagedCollectionViewExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PagedCollectionViewExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -80,6 +78,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		370998932393C2DC00CE2698 /* CenteredItemViewController */ = {
+			isa = PBXGroup;
+			children = (
+				37A8C11E236E5A9D00C9D896 /* CenteredItemViewController.swift */,
+				3793711E2348B4BF00540553 /* CenteredItemCollectionViewCell.swift */,
+			);
+			path = CenteredItemViewController;
+			sourceTree = "<group>";
+		};
+		370998942393C2EA00CE2698 /* PagedViewController */ = {
+			isa = PBXGroup;
+			children = (
+				37A8C120236E5AA900C9D896 /* PagedViewController.swift */,
+				37E275CB2377808F00768A4E /* PagedCollectionViewCell.swift */,
+				37E275CD2377809800768A4E /* PagedCollectionViewCell.xib */,
+			);
+			path = PagedViewController;
+			sourceTree = "<group>";
+		};
 		37D980052301E2FB00273C52 = {
 			isa = PBXGroup;
 			children = (
@@ -101,12 +118,8 @@
 			isa = PBXGroup;
 			children = (
 				37D980112301E2FB00273C52 /* AppDelegate.swift */,
-				37A8C11E236E5A9D00C9D896 /* CenteredItemViewController.swift */,
-				3793711E2348B4BF00540553 /* CenteredItemCollectionViewCell.swift */,
-				37A8C120236E5AA900C9D896 /* PagedViewController.swift */,
-				37E275CB2377808F00768A4E /* PagedCollectionViewCell.swift */,
-				37E275CD2377809800768A4E /* PagedCollectionViewCell.xib */,
-				379371222348B77E00540553 /* UICollectionView+dequeue.swift */,
+				370998932393C2DC00CE2698 /* CenteredItemViewController */,
+				370998942393C2EA00CE2698 /* PagedViewController */,
 				37D980152301E2FB00273C52 /* Main.storyboard */,
 				37D980232301E33500273C52 /* Supporting files */,
 			);
@@ -231,7 +244,6 @@
 			files = (
 				37A8C11F236E5A9D00C9D896 /* CenteredItemViewController.swift in Sources */,
 				37A8C121236E5AA900C9D896 /* PagedViewController.swift in Sources */,
-				379371232348B77E00540553 /* UICollectionView+dequeue.swift in Sources */,
 				3793711F2348B4BF00540553 /* CenteredItemCollectionViewCell.swift in Sources */,
 				37E275CC2377808F00768A4E /* PagedCollectionViewCell.swift in Sources */,
 				37D980122301E2FB00273C52 /* AppDelegate.swift in Sources */,

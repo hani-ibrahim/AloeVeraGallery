@@ -8,7 +8,20 @@
 
 import UIKit
 
+/// Describe how the content is displayed inside the cell
+/// Helpful for transition animation
 public enum GalleryFillMode {
     case aspectFill
     case aspectFit
+}
+
+extension GalleryFillMode {
+    public var contentMode: UIView.ContentMode {
+        switch self {
+        case .aspectFill:
+            return .scaleAspectFill
+        case .aspectFit:
+            return .scaleAspectFit
+        }
+    }
 }

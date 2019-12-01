@@ -8,13 +8,7 @@
 
 import UIKit
 
-public protocol GalleryTransitionSourceViewController {
-    var sourceView: UIView { get }
-    var metadata: GalleryTransitionMetadata { get }
-    func sourceViewFrame(relativeTo containerView: UIView) -> CGRect
-}
-
-public protocol GalleryTransitionDestinationViewController {
+protocol GalleryTransitionDestinationViewController {
     var animatableView: UIView! { get }
     var topAnimatableViewConstraint: NSLayoutConstraint! { get }
     var bottomAnimatableViewConstraint: NSLayoutConstraint! { get }
@@ -23,26 +17,29 @@ public protocol GalleryTransitionDestinationViewController {
     func animatableViewFrame(relativeTo containerView: UIView) -> CGRect
 }
 
-public final class GalleryTransitionAnimator: UIPercentDrivenInteractiveTransition {
+final class GalleryTransitionAnimator: UIPercentDrivenInteractiveTransition {
     
-    public var isDismissed = false
-    public var isInteractive = false
+    var isDismissed = false
+    var isInteractive = false
     
     private let transitionDuration: TimeInterval
-    private var sourceViewController: (UIViewController & GalleryTransitionSourceViewController)?
+    private let source: GalleryTransitionSource
+    
     private var destinationViewController: (UIViewController & GalleryTransitionDestinationViewController)?
     private var currentContext: UIViewControllerContextTransitioning?
     private var currentAnimator = UIViewPropertyAnimator()
     private var transitionData: TransitionData?
+    
     private var interactiveDismissStartLocation: CGPoint = .zero
     private var interactiveDismissDisplacement: CGPoint = .zero
     private var shouldCancelInteractiveDismiss = false
     
-    public init(duration: TimeInterval) {
+    init(source: GalleryTransitionSource, duration: TimeInterval) {
+        self.source = source
         self.transitionDuration = duration
     }
     
-    public func configure(viewController: UIViewController) {
+    func configure(viewController: UIViewController) {
         destinationViewController = viewController as? UIViewController & GalleryTransitionDestinationViewController
         let recognizer = UIPanGestureRecognizer(target: self, action: #selector(panGestureRecognized))
         viewController.view.addGestureRecognizer(recognizer)
@@ -50,32 +47,26 @@ public final class GalleryTransitionAnimator: UIPercentDrivenInteractiveTransiti
 }
 
 extension GalleryTransitionAnimator: UIViewControllerAnimatedTransitioning {
-    public func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
+    func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         transitionDuration
     }
     
-    public func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
+    func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         interruptibleAnimator(using: transitionContext).startAnimation()
     }
     
-    public func interruptibleAnimator(using transitionContext: UIViewControllerContextTransitioning) -> UIViewImplicitlyAnimating {
+    func interruptibleAnimator(using transitionContext: UIViewControllerContextTransitioning) -> UIViewImplicitlyAnimating {
         guard currentContext !== transitionContext else {
             return currentAnimator
         }
-        currentContext = transitionContext
-        setupContainerView()
-        guard let sourceViewController = sourceViewController, let destinationViewController = destinationViewController else {
+        guard let destinationViewController = destinationViewController else {
+            assertionFailure("GalleryTransitionAnimator: Destination ViewController does not conform to `GalleryTransitionDestinationViewController`")
             transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
             return currentAnimator
         }
-        
-        transitionData = TransitionData(
-            sourceViewController: sourceViewController,
-            destinationViewController: destinationViewController,
-            sourceFrame: sourceViewController.sourceViewFrame(relativeTo: transitionContext.containerView),
-            destinationFrame: destinationViewController.animatableViewFrame(relativeTo: transitionContext.containerView)
-        )
-        transitionData?.sourceViewController.sourceView.alpha = 0
+//        print("\n\n")
+        currentContext = transitionContext
+        setupContainerView(context: transitionContext, destinationViewController: destinationViewController)
         currentAnimator = UIViewPropertyAnimator(duration: transitionDuration, dampingRatio: 0.8)
         if !isInteractive, let transitionData = transitionData {
             addAnimations(with: transitionData, on: currentAnimator, isDismissed: isDismissed, shouldConfigureInitialValue: true)
@@ -88,28 +79,27 @@ extension GalleryTransitionAnimator: UIViewControllerAnimatedTransitioning {
 }
 
 private extension GalleryTransitionAnimator {
-    func setupContainerView() {
-        guard
-            let context = currentContext,
-            let destinationViewController = destinationViewController,
-            let sourceViewController = context.viewController(forKey: isDismissed ? .to : .from ) as? UIViewController & GalleryTransitionSourceViewController else {
-                return
-        }
-        self.sourceViewController = sourceViewController
+    func setupContainerView(context: UIViewControllerContextTransitioning, destinationViewController: UIViewController & GalleryTransitionDestinationViewController) {
         context.containerView.addSubview(destinationViewController.view)
         destinationViewController.view.frame = isDismissed ? context.initialFrame(for: destinationViewController) : context.finalFrame(for: destinationViewController)
+        transitionData = TransitionData(
+            sourceFrame: source.sourceViewFrame(relativeTo: context.containerView),
+            destinationViewController: destinationViewController,
+            destinationFrame: destinationViewController.animatableViewFrame(relativeTo: context.containerView)
+        )
+        source.sourceView.alpha = 0
     }
     
     func addAnimations(with data: TransitionData, on animator: UIViewPropertyAnimator, isDismissed: Bool, shouldConfigureInitialValue: Bool) {
         animateViewConstraint(with: data, on: animator, isDismissed: isDismissed, shouldConfigureInitialValue: shouldConfigureInitialValue)
         animateViewTransform(with: data, on: animator, isDismissed: isDismissed, shouldConfigureInitialValue: shouldConfigureInitialValue)
-        configureSourceViewController(with: data, on: animator)
+        configureSourceViewController(on: animator)
         configureDestinationViewController(with: data, on: animator, isDismissed: isDismissed, shouldConfigureInitialValue: shouldConfigureInitialValue)
     }
     
     func animateViewConstraint(with data: TransitionData, on animator: UIViewPropertyAnimator, isDismissed: Bool, shouldConfigureInitialValue: Bool) {
-        let difference = data.sourceViewController.metadata.difference(sourceFrame: data.sourceFrame, destinationFrame: data.destinationFrame)
-        
+        let difference = source.metadata.difference(sourceFrame: data.sourceFrame, destinationFrame: data.destinationFrame)
+//        print("difference: \(difference)")
         if shouldConfigureInitialValue {
             data.destinationViewController.topAnimatableViewConstraint.constant = isDismissed ? 0 : difference.y
             data.destinationViewController.bottomAnimatableViewConstraint.constant = isDismissed ? 0 : difference.y
@@ -128,11 +118,12 @@ private extension GalleryTransitionAnimator {
     }
     
     func animateViewTransform(with data: TransitionData, on animator: UIViewPropertyAnimator, isDismissed: Bool, shouldConfigureInitialValue: Bool) {
-        let displacement = data.sourceViewController.metadata.displacement(sourceFrame: data.sourceFrame, destinationFrame: data.destinationFrame)
-        let scale = data.sourceViewController.metadata.scale(sourceFrame: data.sourceFrame, destinationFrame: data.destinationFrame)
+        let displacement = source.metadata.displacement(sourceFrame: data.sourceFrame, destinationFrame: data.destinationFrame)
+        let scale = source.metadata.scale(sourceFrame: data.sourceFrame, destinationFrame: data.destinationFrame)
         let startTransform = CGAffineTransform(translationX: displacement.x, y: displacement.y).scaledBy(x: scale, y: scale)
         let endTransform: CGAffineTransform = .identity
-        
+//        print("displacement: \(displacement)")
+//        print("scale: \(scale)")
         if shouldConfigureInitialValue {
             data.destinationViewController.animatableView.transform = isDismissed ? endTransform : startTransform
         }
@@ -141,9 +132,9 @@ private extension GalleryTransitionAnimator {
         }
     }
     
-    func configureSourceViewController(with data: TransitionData, on animator: UIViewPropertyAnimator) {
-        animator.addCompletion { _ in
-            data.sourceViewController.sourceView.alpha = 1
+    func configureSourceViewController(on animator: UIViewPropertyAnimator) {
+        animator.addCompletion { [weak self] _ in
+            self?.source.sourceView.alpha = 1
         }
     }
     
@@ -201,8 +192,7 @@ private extension GalleryTransitionAnimator {
 }
 
 private struct TransitionData {
-    let sourceViewController: UIViewController & GalleryTransitionSourceViewController
-    let destinationViewController: UIViewController & GalleryTransitionDestinationViewController
     let sourceFrame: CGRect
+    let destinationViewController: UIViewController & GalleryTransitionDestinationViewController
     let destinationFrame: CGRect
 }

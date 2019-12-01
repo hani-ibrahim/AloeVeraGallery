@@ -27,6 +27,9 @@ Main Componenets
         <br><br>
     <img width="600" height="520" src="Resources/centered-item-example.gif">
 
+## DataSource (not required to use `PagedCollectionView`)
+Handy classes to provide a data source for a collection view
+Just create an instance of `SectionConfigurator` with the `ViewModels` and asign the dataSource to the collection view
 
 # License
 MIT License

@@ -8,11 +8,17 @@
 
 import UIKit
 
+/// The meta data required to have a custom transition
 public struct GalleryTransitionMetadata {
     private let contentAspectRatio: CGFloat
     private let sourceFillMode: GalleryFillMode
     private let destinationFillMode: GalleryFillMode
     
+    /// The init function of `GalleryTransitionMetadata`
+    /// - Parameters:
+    ///   - contentAspectRatio: The aspect ratio of the content in both the source and destination ... if the content is an image, then this would be the aspect ratio of the image
+    ///   - sourceFillMode: fill mode of the source
+    ///   - destinationFillMode: fill mode of the destination
     public init(contentAspectRatio: CGFloat, sourceFillMode: GalleryFillMode, destinationFillMode: GalleryFillMode) {
         self.contentAspectRatio = contentAspectRatio
         self.sourceFillMode = sourceFillMode

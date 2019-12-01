@@ -14,8 +14,8 @@ final class ExampleViewController: UIViewController {
     
     @IBOutlet private var pagedCollectionView: PagedCollectionView!
     
-    private let transitionDelegate = GalleryTransitionDelegate()
-    private lazy var dataSource = CollectionViewDataSource(sections: [makeImageSection(withFillMode: .aspectFill)])
+    private lazy var transitionDelegate = GalleryTransitionDelegate(source: self)
+    private lazy var dataSource = DataSource(sections: [makeImageSection(withFillMode: .aspectFill)])
     private var startingIndex = 0
     
     override func viewDidLoad() {
@@ -37,12 +37,13 @@ private extension ExampleViewController {
     
     func makeImageSection(withFillMode fillMode: GalleryFillMode) -> ImageCollectionViewCell.Section {
         let viewModels = (0..<10).map { ImageCellViewModel(image: UIImage(named: "test-image-\($0)")!, fillMode: fillMode) }
-        return ImageCollectionViewCell.Section(viewModels: viewModels, cellSource: .xib)
+        return ImageCollectionViewCell.Section(cellSource: .xib, viewModels: viewModels)
     }
 }
 
 extension ExampleViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        startingIndex = indexPath.item
         let viewController = GalleryViewController.makeViewController()
         viewController.sections = [makeImageSection(withFillMode: .aspectFit)]
         viewController.pageSpacing = 50
@@ -54,7 +55,7 @@ extension ExampleViewController: UICollectionViewDelegate {
     }
 }
 
-extension ExampleViewController: GalleryTransitionSourceViewController {
+extension ExampleViewController: GalleryTransitionSource {
     var sourceView: UIView {
         pagedCollectionView
     }
@@ -78,7 +79,7 @@ extension ExampleViewController: GalleryDelegate {
         pagedCollectionView.updateIndexPathForNextViewLayout(with: indexPath)
     }
     
-    func didClose(galleryViewController: GalleryViewController) {
+    func didClose(galleryViewController: GalleryViewController, source: CloseSource) {
         
     }
 }
