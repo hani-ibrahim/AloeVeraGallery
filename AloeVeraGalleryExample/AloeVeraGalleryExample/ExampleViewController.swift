@@ -14,9 +14,8 @@ final class ExampleViewController: UIViewController {
     
     @IBOutlet private var pagedCollectionView: PagedCollectionView!
     
-    private lazy var transitionDelegate = GalleryTransitionDelegate(source: self)
     private lazy var dataSource = DataSource(sections: [makeImageSection(withFillMode: .aspectFill)])
-    private var startingIndex = 0
+    private var transitionDelegate: GalleryTransitionDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,7 +42,20 @@ private extension ExampleViewController {
 
 extension ExampleViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        startingIndex = indexPath.item
+        guard let cell = collectionView.cellForItem(at: indexPath) else {
+            return
+        }
+        
+        let imageSize = UIImage(named: "test-image-\(indexPath.item)")!.size
+        transitionDelegate = GalleryTransitionDelegate(
+            sourceView: cell,
+            metadata: GalleryTransitionMetadata(
+                contentAspectRatio: imageSize.width / imageSize.height,
+                sourceFillMode: .aspectFill,
+                destinationFillMode: .aspectFit
+            )
+        )
+        
         let viewController = GalleryViewController.makeViewController()
         viewController.sections = [makeImageSection(withFillMode: .aspectFit)]
         viewController.pageSpacing = 50
@@ -52,25 +64,6 @@ extension ExampleViewController: UICollectionViewDelegate {
         viewController.transitioningDelegate = transitionDelegate
         viewController.modalPresentationStyle = .overFullScreen
         present(viewController, animated: true)
-    }
-}
-
-extension ExampleViewController: GalleryTransitionSource {
-    var sourceView: UIView {
-        pagedCollectionView
-    }
-    
-    var metadata: GalleryTransitionMetadata {
-        let imageSize = UIImage(named: "test-image-\(startingIndex)")!.size
-        return GalleryTransitionMetadata(
-            contentAspectRatio: imageSize.width / imageSize.height,
-            sourceFillMode: .aspectFill,
-            destinationFillMode: .aspectFit
-        )
-    }
-    
-    func sourceViewFrame(relativeTo containerView: UIView) -> CGRect {
-        view.convert(pagedCollectionView.frame, to: containerView)
     }
 }
 

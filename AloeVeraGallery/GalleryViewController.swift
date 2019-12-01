@@ -24,7 +24,7 @@ public protocol GalleryDelegate: AnyObject {
 /// GalleryViewController can be displayed by two ways
 /// 1- As a normal view controller that can displayed modaly or in a navigation controller
 /// 2-  By a custom gallery transition using `GalleryTransitionDelegate`, for that to work properly please configure `modalPresentationStyle` to be `.overFullScreen`
-open class GalleryViewController: UIViewController {
+open class GalleryViewController: UIViewController, GalleryTransitionDestination {
     
     /// Handy function to initialize a new instance of the view controller
     public static func makeViewController() -> GalleryViewController {
@@ -98,12 +98,6 @@ extension GalleryViewController: UICollectionViewDelegate {
     
     open func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
         scrollingStopping(at: scrollView.bounds.origin, didEndScrollingAnimation: true)
-    }
-}
-
-extension GalleryViewController: GalleryTransitionDestinationViewController {
-    public func animatableViewFrame(relativeTo containerView: UIView) -> CGRect {
-        view.bounds
     }
 }
 
