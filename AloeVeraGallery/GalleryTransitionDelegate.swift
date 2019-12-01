@@ -12,7 +12,7 @@ public final class GalleryTransitionDelegate: NSObject {
     
     private let transitionAnimator: GalleryTransitionAnimator
     
-    public init(sourceView: UIView, metadata: GalleryTransitionMetadata, duration: TimeInterval = 5) {
+    public init(sourceView: UIView, metadata: GalleryTransitionMetadata, duration: TimeInterval = 0.5) {
         transitionAnimator = GalleryTransitionAnimator(sourceView: sourceView, metadata: metadata, duration: duration)
     }
 }

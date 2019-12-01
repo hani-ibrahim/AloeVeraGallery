@@ -88,13 +88,13 @@ private extension GalleryTransitionAnimator {
             destinationViewController: destinationViewController,
             destinationFrame: destinationViewController.view.frame(relativeTo: context.containerView)
         )
-        sourceView.alpha = 0
+        sourceView.alpha = isDismissed ? 0 : 1
     }
     
     func addAnimations(with data: TransitionData, on animator: UIViewPropertyAnimator, isDismissed: Bool, shouldConfigureInitialValue: Bool) {
         animateViewConstraint(with: data, on: animator, isDismissed: isDismissed, shouldConfigureInitialValue: shouldConfigureInitialValue)
         animateViewTransform(with: data, on: animator, isDismissed: isDismissed, shouldConfigureInitialValue: shouldConfigureInitialValue)
-        configureSourceViewController(on: animator)
+        configureSourceViewController(with: data, on: animator)
         configureDestinationViewController(with: data, on: animator, isDismissed: isDismissed, shouldConfigureInitialValue: shouldConfigureInitialValue)
     }
     
@@ -132,7 +132,18 @@ private extension GalleryTransitionAnimator {
         }
     }
     
-    func configureSourceViewController(on animator: UIViewPropertyAnimator) {
+    func configureSourceViewController(with data: TransitionData, on animator: UIViewPropertyAnimator) {
+        if !isDismissed {
+            let displacement = metadata.displacement(sourceFrame: data.sourceFrame, destinationFrame: data.destinationFrame)
+            let scale = metadata.scale(sourceFrame: data.sourceFrame, destinationFrame: data.destinationFrame)
+            let transform = CGAffineTransform(translationX: -displacement.x, y: -displacement.y).scaledBy(x: 1/scale, y: 1/scale)
+            animator.addAnimations { [weak self] in
+                self?.sourceView.transform = transform
+            }
+            animator.addCompletion { [weak self] _ in
+                self?.sourceView.transform = .identity
+            }
+        }
         animator.addCompletion { [weak self] _ in
             self?.sourceView.alpha = 1
         }
