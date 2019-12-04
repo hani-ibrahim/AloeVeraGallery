@@ -42,7 +42,7 @@ open class PagedCollectionViewLayout: UICollectionViewLayout, CenteredItemLocati
         properties = properties(for: collectionView, bounds: collectionView.bounds)
         cache = cache(for: collectionView, collectionViewSize: collectionView.bounds.size, with: properties)
         
-        if let lastBounds = lastBounds, let lastCenteredItemIndexPath = centeredItemIndexPath(in: lastBounds) {
+        if let lastBounds = lastBounds, lastBounds.size != collectionView.bounds.size, let lastCenteredItemIndexPath = centeredItemIndexPath(in: lastBounds) {
             scrollToItem(at: lastCenteredItemIndexPath, animated: false)
         }
     }

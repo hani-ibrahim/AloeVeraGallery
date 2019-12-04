@@ -8,6 +8,12 @@
 
 import UIKit
 
+/// Optional protocol that cells can conform to in order to clean any internal state
+public protocol CellShowable {
+    func willShowCell(in collectionView: PagedCollectionView)
+    func willHideCell(in collectionView: PagedCollectionView)
+}
+
 public typealias ScrollingHandlerDidScroll = (_ indexPath: IndexPath, _ didEndScrolling: Bool) -> Void
 
 /// Helper class to get the current page
@@ -51,13 +57,23 @@ public final class ScrollingHandler {
 
 private extension ScrollingHandler {
     func scrollingStopping(at contentOffset: CGPoint, didEndScrollingAnimation: Bool) {
-        guard let collectionView = pagedCollectionView?.collectionView else {
+        guard let pagedCollectionView = pagedCollectionView else {
             return
         }
-        let bounds = CGRect(origin: contentOffset, size: collectionView.bounds.size)
-        guard let currentIndexPath = pagedCollectionView?.collectionViewLayout.centeredItemIndexPath(in: bounds) else {
+        let bounds = CGRect(origin: contentOffset, size: pagedCollectionView.collectionView.bounds.size)
+        guard let currentIndexPath = pagedCollectionView.collectionViewLayout.centeredItemIndexPath(in: bounds) else {
             return
         }
         didScroll?(currentIndexPath, didEndScrollingAnimation)
+        
+        pagedCollectionView.collectionView.indexPathsForVisibleItems.forEach { indexPath in
+            if let cell = pagedCollectionView.collectionView.cellForItem(at: currentIndexPath) as? CellShowable {
+                if indexPath == currentIndexPath {
+                    cell.willShowCell(in: pagedCollectionView)
+                } else {
+                    cell.willHideCell(in: pagedCollectionView)
+                }
+            }
+        }
     }
 }
