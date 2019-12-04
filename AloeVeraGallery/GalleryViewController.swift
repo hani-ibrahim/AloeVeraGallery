@@ -31,6 +31,7 @@ open class GalleryViewController: UIViewController, GalleryTransitionDestination
         GalleryViewController(nibName: nil, bundle: Bundle(for: GalleryViewController.self))
     }
     
+    @IBOutlet public private(set) var zoomableScrollView: UIScrollView!
     @IBOutlet public private(set) var collectionView: PagedCollectionView!
     @IBOutlet public private(set) var closeButton: UIButton!
     @IBOutlet public private(set) var pageControl: UIPageControl!
@@ -45,6 +46,10 @@ open class GalleryViewController: UIViewController, GalleryTransitionDestination
     public weak var delegate: GalleryDelegate?
     /// The spacing between the cells in the gallery, should be configured before `viewDidLoad` is being called
     public var pageSpacing: CGFloat = 0
+    /// Set optional title for the close button
+    public var closeButtonTitle: String?
+    /// Maximum zoom scale, give value > 1 to enable zooming
+    public var maximumZoomScale: CGFloat = 1
     /// The starting index to open the gallery at, should be configured before `viewDidLoad` is being called
     public var startingIndexPath: IndexPath?
     /// The sections that are used by the data source to display content in the collection, should be configured before `viewDidLoad` is being called
@@ -53,6 +58,7 @@ open class GalleryViewController: UIViewController, GalleryTransitionDestination
     private var didTapCloseButton = false
     private let viewContentAnimationDuration: TimeInterval = 0.2
     private lazy var dataSource = DataSource(sections: sections)
+    private lazy var zoomingDelegate = GalleryZoomingDelegate(zoomableScrollView: zoomableScrollView, contentScrollView: collectionView.collectionView, contentView: collectionView)
     private lazy var scrollingHandler = ScrollingHandler(collectionView: collectionView) { [weak self] indexPath, didEndScrolling in
         guard let self = self else {
             return
@@ -112,6 +118,8 @@ private extension GalleryViewController {
     func setupView() {
         setupPageControl()
         setupCollectionView()
+        setupZoomableScrollView()
+        setupCloseButtonTitle()
         setupStartingIndexPath()
     }
     
@@ -124,10 +132,26 @@ private extension GalleryViewController {
         collectionView.collectionViewLayout.pageSpacing = pageSpacing
         collectionView.collectionViewLayout.shouldRespectAdjustedContentInset = false
         collectionView.collectionView.showsHorizontalScrollIndicator = false
+        collectionView.collectionView.showsVerticalScrollIndicator = false
         collectionView.collectionView.dataSource = dataSource
         collectionView.collectionView.delegate = self
         dataSource.registerCells(in: collectionView.collectionView)
         collectionView.configure()
+        collectionView.collectionView.reloadData()
+    }
+    
+    func setupZoomableScrollView() {
+        guard maximumZoomScale > 1 else {
+            return
+        }
+        zoomableScrollView.maximumZoomScale = maximumZoomScale
+        zoomableScrollView.delegate = zoomingDelegate
+    }
+    
+    func setupCloseButtonTitle() {
+        if let title = closeButtonTitle {
+            closeButton.setTitle(title, for: .normal)
+        }
     }
     
     func setupStartingIndexPath() {

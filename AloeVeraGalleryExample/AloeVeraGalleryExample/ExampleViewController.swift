@@ -57,6 +57,8 @@ extension ExampleViewController: UICollectionViewDelegate {
         viewController.pageSpacing = 50
         viewController.startingIndexPath = indexPath
         viewController.delegate = self
+        viewController.maximumZoomScale = 3
+        viewController.closeButtonTitle = "Hani"
         viewController.transitioningDelegate = transitionDelegate
         viewController.modalPresentationStyle = .overFullScreen
         present(viewController, animated: true)
