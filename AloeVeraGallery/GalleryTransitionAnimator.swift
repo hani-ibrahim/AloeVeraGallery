@@ -171,7 +171,10 @@ private extension GalleryTransitionAnimator {
                     cancelAnimator.startAnimation()
                 } else {
                     addAnimations(with: transitionData, on: currentAnimator, isDismissed: true, shouldConfigureInitialValue: false)
-                    finish()
+                    // An attempt to fix a crash while dismissing
+                    DispatchQueue.main.async {
+                        self.finish()
+                    }
                 }
             }
             isInteractive = false
