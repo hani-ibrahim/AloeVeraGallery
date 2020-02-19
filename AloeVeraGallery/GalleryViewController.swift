@@ -44,7 +44,7 @@ open class GalleryViewController: UIViewController, GalleryTransitionDestination
     @IBOutlet public private(set) var closeButtonTopConstraint: NSLayoutConstraint!
     @IBOutlet public private(set) var closeButtonTrailingConstraint: NSLayoutConstraint!
     
-    @IBOutlet weak var pageControlBottomConstraint: NSLayoutConstraint!
+    @IBOutlet public private(set) var pageControlBottomConstraint: NSLayoutConstraint!
     
     /// The `delegate` of the gallery view controller to know how the user interact with the gallery
     public weak var delegate: GalleryDelegate?
