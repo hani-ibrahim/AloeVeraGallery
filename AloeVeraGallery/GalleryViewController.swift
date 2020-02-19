@@ -41,6 +41,11 @@ open class GalleryViewController: UIViewController, GalleryTransitionDestination
     @IBOutlet public private(set) var rightAnimatableViewConstraint: NSLayoutConstraint!
     @IBOutlet public private(set) var leftAnimatableViewConstraint: NSLayoutConstraint!
     
+    @IBOutlet public private(set) var closeButtonTopConstraint: NSLayoutConstraint!
+    @IBOutlet public private(set) var closeButtonTrailingConstraint: NSLayoutConstraint!
+    
+    @IBOutlet public private(set) var pageControlBottomConstraint: NSLayoutConstraint!
+    
     /// The `delegate` of the gallery view controller to know how the user interact with the gallery
     public weak var delegate: GalleryDelegate?
     /// The spacing between the cells in the gallery, should be configured before `viewDidLoad` is being called
@@ -87,6 +92,14 @@ open class GalleryViewController: UIViewController, GalleryTransitionDestination
     @IBAction private func closeButtonPressed() {
         didTapCloseButton = true
         dismiss(animated: true)
+    }
+    
+    @IBAction func pageControlValueChanged(sender: UIPageControl) {
+        guard let indexPath = dataSource.indexPath(forAbsoluteIndex: sender.currentPage) else {
+            return
+        }
+        collectionView.scrollToItem(at: indexPath, animated: true)
+        delegate?.gallery(galleryViewController: self, didScrollToItemAt: indexPath)
     }
 }
 

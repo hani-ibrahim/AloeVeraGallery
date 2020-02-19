@@ -61,4 +61,23 @@ extension DataSource {
             }
         }
     }
+    
+    /// Getting the `IndexPath` for the given absolute index
+    ///  Example:   Having `UICollectionView` with `2` sections, each section has `3` celll
+    ///          Then  `absoluteIndex = 4` gives `IndexPath` of `{1, 1}`
+    /// - Parameter absoluteIndex: The absolute index to find the `IndexPath` for
+    public func indexPath(forAbsoluteIndex absoluteIndex: Int) -> IndexPath? {
+        guard absoluteIndex >= 0 else {
+            return nil
+        }
+        var count = 0
+        for sectionIndex in 0..<sections.count {
+            if absoluteIndex - count >= sections[sectionIndex].numberOfCells {
+                count += sections[sectionIndex].numberOfCells
+            } else {
+                return IndexPath(row: absoluteIndex - count, section: sectionIndex)
+            }
+        }
+        return nil
+    }
 }
