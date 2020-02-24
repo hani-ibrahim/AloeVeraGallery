@@ -28,11 +28,13 @@ final class GalleryTransitionAnimator: UIPercentDrivenInteractiveTransition {
     private var destinationViewController: (UIViewController & GalleryTransitionDestination)?
     private var currentContext: UIViewControllerContextTransitioning?
     private var currentAnimator = UIViewPropertyAnimator()
+    private var finishAnimator = UIViewPropertyAnimator()
     private var transitionData: TransitionData?
     
     private var interactiveDismissStartLocation: CGPoint = .zero
     private var interactiveDismissDisplacement: CGPoint = .zero
     private var shouldCancelInteractiveDismiss = false
+    private var didCallCompleteTransition = false
     
     init(sourceView: UIView, metadata: GalleryTransitionMetadata, duration: TimeInterval) {
         self.sourceView = sourceView
@@ -67,13 +69,14 @@ extension GalleryTransitionAnimator: UIViewControllerAnimatedTransitioning {
         }
         
         currentContext = transitionContext
+        didCallCompleteTransition = false
         setupContainerView(context: transitionContext, destinationViewController: destinationViewController)
         currentAnimator = UIViewPropertyAnimator(duration: transitionDuration, dampingRatio: 0.8)
         if !isInteractive, let transitionData = transitionData {
             addAnimations(with: transitionData, on: currentAnimator, isDismissed: isDismissed, shouldConfigureInitialValue: true)
         }
         currentAnimator.addCompletion { _ in
-            transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+            self.finishTransition(isFinished: !transitionContext.transitionWasCancelled)
         }
         return currentAnimator
     }
@@ -152,6 +155,7 @@ private extension GalleryTransitionAnimator {
         let location = recognizer.translation(in: currentContext?.containerView)
         switch recognizer.state {
         case .began:
+            finishAnimator.stopAnimation(true)
             interactiveDismissStartLocation = location
             isInteractive = true
             destinationViewController?.dismiss(animated: true)
@@ -161,21 +165,13 @@ private extension GalleryTransitionAnimator {
         case .changed:
             updatePosition(for: location)
         case .ended, .cancelled:
-            if let transitionData = transitionData, let currentContext = currentContext {
-                if shouldCancelInteractiveDismiss {
-                    let cancelAnimator = UIViewPropertyAnimator(duration: transitionDuration, dampingRatio: 0.8)
-                    addAnimations(with: transitionData, on: cancelAnimator, isDismissed: false, shouldConfigureInitialValue: false)
-                    cancelAnimator.addCompletion { _ in
-                        currentContext.completeTransition(false)
-                    }
-                    cancelAnimator.startAnimation()
-                } else {
-                    addAnimations(with: transitionData, on: currentAnimator, isDismissed: true, shouldConfigureInitialValue: false)
-                    // An attempt to fix a crash while dismissing
-                    DispatchQueue.main.async {
-                        self.finish()
-                    }
+            if let transitionData = transitionData {
+                finishAnimator = UIViewPropertyAnimator(duration: transitionDuration, dampingRatio: 0.8)
+                addAnimations(with: transitionData, on: finishAnimator, isDismissed: !shouldCancelInteractiveDismiss, shouldConfigureInitialValue: false)
+                finishAnimator.addCompletion { _ in
+                    self.finishTransition(isFinished: !self.shouldCancelInteractiveDismiss)
                 }
+                finishAnimator.startAnimation()
             }
             isInteractive = false
         default:
@@ -191,6 +187,14 @@ private extension GalleryTransitionAnimator {
         destinationViewController?.animatableView.transform = transform
         shouldCancelInteractiveDismiss = displacement.y < 0 || displacement.y < interactiveDismissDisplacement.y
         interactiveDismissDisplacement = displacement
+    }
+    
+    func finishTransition(isFinished: Bool) {
+        guard let currentContext = currentContext, !didCallCompleteTransition else {
+            return
+        }
+        didCallCompleteTransition = true
+        currentContext.completeTransition(isFinished)
     }
 }
 
