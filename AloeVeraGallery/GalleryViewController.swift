@@ -27,8 +27,8 @@ public protocol GalleryDelegate: AnyObject {
 open class GalleryViewController: UIViewController, GalleryTransitionDestination {
     
     /// Handy function to initialize a new instance of the view controller
-    public static func makeViewController() -> GalleryViewController {
-        GalleryViewController(nibName: nil, bundle: Bundle(for: GalleryViewController.self))
+    public static func makeViewController<T: GalleryViewController>() -> T {
+        T(nibName: String(describing: GalleryViewController.self), bundle: Bundle(for: GalleryViewController.self))
     }
     
     @IBOutlet public private(set) var collectionView: PagedCollectionView!
@@ -40,10 +40,8 @@ open class GalleryViewController: UIViewController, GalleryTransitionDestination
     @IBOutlet public private(set) var bottomAnimatableViewConstraint: NSLayoutConstraint!
     @IBOutlet public private(set) var rightAnimatableViewConstraint: NSLayoutConstraint!
     @IBOutlet public private(set) var leftAnimatableViewConstraint: NSLayoutConstraint!
-    
     @IBOutlet public private(set) var closeButtonTopConstraint: NSLayoutConstraint!
     @IBOutlet public private(set) var closeButtonTrailingConstraint: NSLayoutConstraint!
-    
     @IBOutlet public private(set) var pageControlBottomConstraint: NSLayoutConstraint!
     
     /// The `delegate` of the gallery view controller to know how the user interact with the gallery
@@ -66,6 +64,14 @@ open class GalleryViewController: UIViewController, GalleryTransitionDestination
         if didEndScrolling {
             self.delegate?.gallery(galleryViewController: self, didScrollToItemAt: indexPath)
         }
+    }
+    
+    public required override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+    }
+    
+    public required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     open override func viewDidLoad() {
