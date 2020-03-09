@@ -49,7 +49,12 @@ extension GalleryTransitionMetadata {
         let destinationPadding = padding(in: destinationFrame, fillMode: destinationFillMode)
         let sourceContentWidth = sourceFrame.size.width + sourcePadding.horizontal * 2
         let destinationContentWidth = destinationFrame.size.width + destinationPadding.horizontal * 2
-        return sourceContentWidth / destinationContentWidth
+        let scale = sourceContentWidth / destinationContentWidth
+        if scale == 0 {
+            return 1
+        } else {
+            return scale
+        }
     }
 }
 
