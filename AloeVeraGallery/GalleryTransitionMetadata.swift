@@ -31,9 +31,13 @@ extension GalleryTransitionMetadata {
         let sourcePadding = padding(in: sourceFrame, fillMode: sourceFillMode)
         let destinationPadding = padding(in: destinationFrame, fillMode: destinationFillMode)
         let destinationScale = scale(sourceFrame: sourceFrame, destinationFrame: destinationFrame)
-        return CGPoint(
+        let difference = CGPoint(
             x: sourcePadding.horizontal / destinationScale - destinationPadding.horizontal,
             y: sourcePadding.vertical / destinationScale - destinationPadding.vertical
+        )
+        return CGPoint(
+            x: min(difference.x, 10000),
+            y: min(difference.y, 10000)
         )
     }
     
@@ -49,12 +53,7 @@ extension GalleryTransitionMetadata {
         let destinationPadding = padding(in: destinationFrame, fillMode: destinationFillMode)
         let sourceContentWidth = sourceFrame.size.width + sourcePadding.horizontal * 2
         let destinationContentWidth = destinationFrame.size.width + destinationPadding.horizontal * 2
-        let scale = sourceContentWidth / destinationContentWidth
-        if scale == 0 {
-            return 1
-        } else {
-            return scale
-        }
+        return sourceContentWidth / destinationContentWidth
     }
 }
 
