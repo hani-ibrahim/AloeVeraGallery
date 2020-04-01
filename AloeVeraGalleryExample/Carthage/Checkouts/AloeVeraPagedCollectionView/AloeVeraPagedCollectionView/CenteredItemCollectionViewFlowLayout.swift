@@ -17,19 +17,7 @@ open class CenteredItemCollectionViewFlowLayout: UICollectionViewFlowLayout, Cen
     
     open override func prepare(forAnimatedBoundsChange oldBounds: CGRect) {
         super.prepare(forAnimatedBoundsChange: oldBounds)
-        
-        guard let collectionView = collectionView, let indexPath = lastLocatedCenteredItemIndexPath, let layoutAttributes = layoutAttributesForItem(at: indexPath) else {
-            return
-        }
-        
-        let offset = contentOffset(
-            forItemAtPosition: layoutAttributes.center,
-            toBeCenteredIn: collectionView.bounds.size,
-            near: collectionView.adjustedCenter,
-            within: collectionView.adjustedContentInset,
-            contentSize: collectionViewContentSize
-        )
-        scrollToItem(in: collectionView, to: offset, animated: false)
+        scrollToTheLastCenteredLocatedItem()
     }
     
     /// ⚠️ Must be called before the rotation start
@@ -45,6 +33,22 @@ open class CenteredItemCollectionViewFlowLayout: UICollectionViewFlowLayout, Cen
         )
         let items = layoutAttributesArray.map { ItemLocation(indexPath: $0.indexPath, center: $0.center) }
         lastLocatedCenteredItemIndexPath = locateCenteredItem(near: contentVisibleCenter, from: items)
+    }
+    
+    /// Locate scroll to the item located by calling `collectionViewSizeWillChange`
+    open func scrollToTheLastCenteredLocatedItem() {
+        guard let collectionView = collectionView, let indexPath = lastLocatedCenteredItemIndexPath, let layoutAttributes = layoutAttributesForItem(at: indexPath) else {
+            return
+        }
+        
+        let offset = contentOffset(
+            forItemAtPosition: layoutAttributes.center,
+            toBeCenteredIn: collectionView.bounds.size,
+            near: collectionView.adjustedCenter,
+            within: collectionView.adjustedContentInset,
+            contentSize: collectionViewContentSize
+        )
+        scrollToItem(in: collectionView, to: offset, animated: false)
     }
 }
 
